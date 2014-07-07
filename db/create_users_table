@@ -1,0 +1,13 @@
+CREATE TABLE IF NOT EXISTS users (
+  id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+  name varchar(255) NOT NULL,
+  email varchar(255) NOT NULL,
+  password varchar(32) NOT NULL,
+  user_type_id INT NOT NULL,
+  permission_type_id INT NOT NULL,
+  UNIQUE(name)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+SELECT * FROM users;
+
+

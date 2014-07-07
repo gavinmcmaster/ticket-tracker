@@ -1,0 +1,29 @@
+CREATE TABLE `tickets` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `type_id` int(11) NOT NULL,
+  `title` varchar(255) NOT NULL,
+  `description` mediumtext NOT NULL,
+  `assigned_to_id` int(11) DEFAULT NULL,
+  `reported_by_id` int(11) NOT NULL,
+  `status_type_id` int(11) NOT NULL DEFAULT '1',
+  `resolution_type_id` int(11) DEFAULT NULL,
+  `priority_type_id` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `assigned_to_id` (`assigned_to_id`),
+  KEY `reported_by_id` (`reported_by_id`),
+  KEY `fk_status_type_id` (`status_type_id`),
+  KEY `fk_ticket_type_id` (`type_id`),
+  KEY `fk_priority_type_id` (`priority_type_id`),
+  KEY `fk_resolution_type_id` (`resolution_type_id`),
+  CONSTRAINT `fk_priority_type_id` FOREIGN KEY (`priority_type_id`) REFERENCES `ticket_priority_types` (`id`) ON DELETE NO ACTION,
+  CONSTRAINT `fk_resolution_type_id` FOREIGN KEY (`resolution_type_id`) REFERENCES `ticket_resolution_types` (`id`) ON DELETE NO ACTION,
+  CONSTRAINT `fk_status_type_id` FOREIGN KEY (`status_type_id`) REFERENCES `ticket_status_types` (`id`) ON DELETE NO ACTION,
+  CONSTRAINT `fk_ticket_type_id` FOREIGN KEY (`type_id`) REFERENCES `ticket_types` (`id`) ON DELETE NO ACTION,
+  CONSTRAINT `tickets_ibfk_1` FOREIGN KEY (`assigned_to_id`) REFERENCES `users` (`id`) ON DELETE NO ACTION,
+  CONSTRAINT `tickets_ibfk_2` FOREIGN KEY (`reported_by_id`) REFERENCES `users` (`id`) ON DELETE NO ACTION
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8
+
+09:29:19	INSERT INTO tickets (type_id, title, description, reported_by_id, priority_type_id, assigned_to_id) VALUES (1, "test title", "test description", 14, 1, 16)	Error Code: 1452. Cannot add or update a child row: a foreign key constraint fails (`ticket_tracker`.`tickets`, CONSTRAINT `tickets_ibfk_1` FOREIGN KEY (`assigned_to_id`) REFERENCES `users` (`id`) ON DELETE NO ACTION)	0.060 sec
+09:32:05	INSERT INTO tickets (type_id, title, description, reported_by_id, priority_type_id, assigned_to_id) VALUES (1, "test title", "test description", 9, 1, 14)	Error Code: 1452. Cannot add or update a child row: a foreign key constraint fails (`ticket_tracker`.`tickets`, CONSTRAINT `tickets_ibfk_1` FOREIGN KEY (`assigned_to_id`) REFERENCES `users` (`id`) ON DELETE NO ACTION)	0.041 sec
+
+12:39:07	ALTER TABLE tickets ADD created_date DATE NOT NULL DEFAULT NOW()	Error Code: 1067. Invalid default value for 'created_date'	0.000 sec
