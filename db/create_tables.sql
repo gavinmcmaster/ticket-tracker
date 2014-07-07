@@ -115,7 +115,7 @@ DROP TABLE user_types; /* Cannot delete: a foreign key constraint fails */
 UPDATE users SET permission_type_id=4 WHERE name='gav';
 UPDATE tickets SET created_time=NOW() WHERE created_time < (NOW() - INTERVAL 10 MINUTE);
 UPDATE tickets SET created_time='2014-07-03 13:03:22' WHERE created_time < (NOW() - INTERVAL 10 MINUTE);
-UPDATE tickets SET created_time=NOW() WHERE id=14;	
+UPDATE tickets SET created_time=NOW() WHERE id=15;	
 
 UPDATE tickets SET status_type_id = 2 WHERE assigned_to_id IS NOT NULL;
 

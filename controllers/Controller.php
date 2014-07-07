@@ -14,7 +14,7 @@ class Controller {
     private $db_host = "localhost";
     private $db_name = "ticket_tracker"; 
     private $db_user = "****";
-    private $db_pass = "*****";
+    private $db_pass = "****";
 
     private $userController = null;
     private $ticketController = null;
@@ -90,7 +90,7 @@ class Controller {
         Session::getInstance()->__unset('permission_type_id');
         Session::getInstance()->destroy();
 
-        $url = 'http://ticket_tracker.local/index.php';
+        $url = 'http://localhost/training/web/ticket_tracker/index.php';
         header("Location: $url");
         die();
     }
@@ -178,7 +178,7 @@ class Controller {
         Session::getInstance()->__set('user_type_id', $user['user_type_id']);
         Session::getInstance()->__set('permission_type_id', $user['permission_type_id']);
 
-        $url = 'http://ticket_tracker.local/index.php?action=listTickets';
+        $url = 'http://localhost/training/web/ticket_tracker/index.php?action=listTickets';
         header("Location: $url");
         die();
     }

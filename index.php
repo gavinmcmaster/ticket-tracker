@@ -1,7 +1,7 @@
 <?php include('ui/header.htm') ?>
 <?php
 
-    $id = 0;
+    //$id = 0;
 
     require_once 'config.inc.php';
     // create session...every time ffs

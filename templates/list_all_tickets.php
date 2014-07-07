@@ -25,7 +25,7 @@
                         $date = date_create($ticket['created_time']);
                         $formattedDate = date_format($date, 'd/m/y');
                         $ticketId = $ticket['id'];
-                        $ticketUrl = "http://ticket_tracker.local/index.php?action=viewTicket&id=".$ticketId;
+                        $ticketUrl = "http://localhost/training/web/ticket_tracker/index.php?action=viewTicket&id=".$ticketId;
                         $assignee = $this->userController->getUserById($ticket['assigned_to_id']);
                         $ticketType = $this->ticketController->getTicketTypeById($ticket['type_id']);
                         $status =  $this->ticketController->getStatusTypeById($ticket['status_type_id']);
