@@ -1,8 +1,6 @@
 <?php include('ui/header.htm') ?>
 <?php
 
-    //$id = 0;
-
     require_once 'config.inc.php';
     // create session...every time ffs
     require_once 'models/Session.php';
@@ -10,9 +8,9 @@
 
     //echo "username set in session:". $session->__isset('username');
 
-    if($session->__isset('username')) {
+    /*if($session->__isset('username')) {
         echo("Hello " . $session->__get('username'));
-    }
+    }*/
 
     require_once 'models/Database.php';
     require_once 'models/User.php';
@@ -31,7 +29,7 @@
 
     // user actions
     $action = isset($_GET['action']) ? $_GET['action'] : '';
-    if(method_exists($controller,$action)) $controller->$action();
+    if(method_exists($controller,$action)) $controller->handleAction($action);
 ?>
 
 <?php include('ui/footer.htm') ?>

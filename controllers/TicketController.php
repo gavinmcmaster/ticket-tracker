@@ -37,6 +37,14 @@ class TicketController {
         }
     }
 
+    public function addComment($ticketId, $comment) {
+        return $this->ticket->addComment($ticketId, $comment);
+    }
+
+    public function getTicketComments($id) {
+        return $this->ticket->getTicketComments($id);
+    }
+
     public function fetchAllTickets() {
         return $this->ticket->fetchAllTickets();
     }
