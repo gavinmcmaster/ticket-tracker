@@ -34,24 +34,6 @@ class User {
         $this->dbo->execute();
         $result = $this->dbo->fetch();
 
-        //echo gettype($result) . " - ".$result . " - " . count($result) . "<br/>";
-
-        /*if(gettype($result)=='array') {
-            echo " login successful!!!"."<br/>";
-            // save session info
-
-            // show default
-        }
-        else {
-            echo " login failed!!!"."<br/>";
-        }*/
-
-       /*foreach($result as $prop) {
-         echo $prop . "\r\n<br/>";
-        }*/
-
-        //echo count($result) . " - " . $result['name'] . " - " .$result['email'];
-
         return $result;
     }
 
@@ -61,6 +43,15 @@ class User {
 
     public function getUserById($id) {
         $this->dbo->query("SELECT * FROM users WHERE id = :id");
+        $this->dbo->bind(':id', $id);
+        $this->dbo->execute();
+        $result = $this->dbo->fetch();
+
+        return $result;
+    }
+
+    public function getUserPermissionTypeById($id) {
+        $this->dbo->query("SELECT * FROM user_permission_types WHERE id = :id");
         $this->dbo->bind(':id', $id);
         $this->dbo->execute();
         $result = $this->dbo->fetch();

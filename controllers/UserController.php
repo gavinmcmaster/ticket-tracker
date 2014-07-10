@@ -54,6 +54,10 @@ class UserController {
         return $this->user->getUserById($id);
      }
 
+    public function getUserPermissionTypeById($id) {
+        return $this->user->getUserPermissionTypeById($id);
+    }
+
     public function getLastInsertId() {
         return $this->user->getLastInsertId();
      }

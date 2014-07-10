@@ -132,4 +132,22 @@ class Ticket {
 
         return $result;
     }
+
+    public function getTicketComments($ticketId) {
+        $this->dbo->query("SELECT * FROM comments WHERE ticket_id = :ticket_id");
+        $this->dbo->bind(':ticket_id', $ticketId);
+        $this->dbo->execute();
+        $result = $this->dbo->fetchAll();
+
+        return $result;
+    }
+
+    public function addComment($ticketId, $comment) {
+        $this->dbo->query("INSERT INTO comments (ticket_id, comment, created_time) VALUES (:ticket_id, :comment, NOW())");
+        $this->dbo->bind(':ticket_id', $ticketId);
+        $this->dbo->bind(':comment', $comment);
+        $success = $this->dbo->execute();
+
+        return $success;
+    }
 } 

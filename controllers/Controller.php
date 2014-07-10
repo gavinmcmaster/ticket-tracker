@@ -38,10 +38,36 @@ class Controller {
     }
 
     public function handleAction($action) {
-
+        echo "Controller,handleAction " .$action . "<br/>";
         switch($action) {
-
-
+            case "login":
+                $this->login();
+                break;
+            case "register":
+                $this->register();
+                break;
+            case "logout":
+                $this->logout();
+               break;
+            case "listTickets":
+                $this->listTickets();
+                break;
+            case "createTicket":
+                $create = isset($_POST['create']);
+                $this->createTicket($create);
+                break;
+            case "viewTicket":
+                $ticketId = $_GET['id'];
+                $createComment = isset($_GET['addComment']) ? $_GET['addComment'] : null;
+                $commentInput = (!empty($_POST['commentInput'])) ? $_POST['commentInput'] : null;
+                $this->viewTicket($ticketId, $createComment, $commentInput);
+                break;
+            case "deleteTicket":
+                $ticketId = $_GET['id'];
+                $this->deleteTicket($ticketId);
+                break;
+            default:
+                echo "error, the action specified is not valid";
         }
     }
 
@@ -71,7 +97,7 @@ class Controller {
                 $user = $this->userController->getUserById($userId);
 
                 if($user) {
-                    //echo "Controller register user " . $user['id']. " - " .$user['name'] . " - " . $user['email'] . " - ". $user['user_type_id'] . " - " . $user['permission_type_id'];
+                    ///cho "Controller register user " . $user['id']. " - " .$user['name'] . " - " . $user['email'] . " - ". $user['user_type_id'] . " - " . $user['permission_type_id'];
                     $this->handleUserVerification($user);
                 }
             }
@@ -87,7 +113,8 @@ class Controller {
         Session::getInstance()->__unset('user_name');
         Session::getInstance()->__unset('user_email');
         Session::getInstance()->__unset('user_type_id');
-        Session::getInstance()->__unset('permission_type_id');
+        Session::getInstance()->__unset('user_permission_type');
+        //Session::getInstance()->__unset('permission_type_id');
         Session::getInstance()->destroy();
 
         $url = 'http://ticket_tracker.local/index.php';
@@ -99,8 +126,6 @@ class Controller {
         //echo "Controller listTickets";
         try {
             $allTickets = $this->ticketController->fetchAllTickets();
-            //$users = $this->userController()->fetchAllUsers();
-
         }
         catch(Exception $e) {
             echo 'Caught exception: ',  $e->getMessage(), "\n";
@@ -109,10 +134,10 @@ class Controller {
         include __DIR__ . '/../templates/list_all_tickets.php';
     }
 
-    public function createTicket() {
+    public function createTicket($create) {
         //echo "Controller createTicket<br/>";
         
-        if(isset($_POST['create'])) {
+        if($create) {
             try {
                 $success = $this->ticketController->createTicket();
                 echo "createTicket success: " . $success;
@@ -136,21 +161,41 @@ class Controller {
             $allUsers = $this->userController->fetchAllUsers();
         }
         catch(Exception $e) {
-            echo 'Caught exception: ',  $e->getMessage(), "\n";
+            echo 'Caught exception: ', $e->getMessage(), "\n";
         }
 
         include __DIR__ . '/../templates/create_ticket.php';
     }
 
-    public function viewTicket() {
-        $ticketId = $_GET['id'];
+    public function viewTicket($ticketId, $createComment, $commentInput) {
         //echo "Controller viewTicket ".$ticketId;
         $ticket = $this->ticketController->getTicketById($ticketId);
         $ticketTypeData = $this->ticketController->getTicketTypeById($ticket['type_id']);
         $ticketType = $ticketTypeData['type'];
         $priorityTypeData = $this->ticketController->getPriorityTypeById($ticket['priority_type_id']);
         $priorityType = $priorityTypeData['type'];
+        $assigneeData = $this->userController->getUserById($ticket['assigned_to_id']);
+        $reporterData = $this->userController->getUserById($ticket['reported_by_id']);
+        $assignee = $assigneeData['name'];
+        $reporter = $reporterData['name'];
+        $dateCreated = date_create($ticket['created_time']);
+        $dateResolved = (isset($ticket['resolved_time'])) ? date_create($ticket['resolved_time']) : "";
+        $userPermissionType = Session::getInstance()->__get('user_permission_type');
+        echo "permission type: " . $userPermissionType ."<br/>"; // admin, crud, update, view
 
+        if(isset($commentInput) && !empty($commentInput)) {
+            echo "comment input is set to: " .  $commentInput;
+            try {
+               $success = $this->ticketController->addComment($ticketId, $commentInput);
+            }
+            catch(Exception $e) {
+                echo 'Caught exception: ',  $e->getMessage(), "\n";
+            }
+        }
+
+        $allCommentsData = $this->ticketController->getTicketComments($ticketId);
+
+        echo "there are " .count($allCommentsData) . " tickets";
 
         include __DIR__ . '/../templates/view_ticket.php';
     }
@@ -159,8 +204,8 @@ class Controller {
         echo "Controller editTicket";
     }*/
 
-    public function deleteTicket() {
-        echo "Controller deleteTicket";
+    public function deleteTicket($ticketId) {
+        echo "Controller deleteTicket: ".$ticketId;
     }
 
     public function getUserController() {
@@ -176,7 +221,10 @@ class Controller {
         Session::getInstance()->__set('user_name', $user['name']);
         Session::getInstance()->__set('user_email', $user['email']);
         Session::getInstance()->__set('user_type_id', $user['user_type_id']);
-        Session::getInstance()->__set('permission_type_id', $user['permission_type_id']);
+        $userPermissionTypeData = $this->userController->getUserPermissionTypeById($user['permission_type_id']);
+        Session::getInstance()->__set('user_permission_type', $userPermissionTypeData['type']);
+        // not sure this is needed, or even useful
+        //Session::getInstance()->__set('permission_type_id', $user['permission_type_id']);
 
         $url = 'http://ticket_tracker.local/index.php?action=listTickets';
         header("Location: $url");
