@@ -13,8 +13,8 @@ class Controller {
     private $dbo;
     private $db_host = "localhost";
     private $db_name = "ticket_tracker"; 
-    private $db_user = "root";
-    private $db_pass = "root";
+    private $db_user = "";
+    private $db_pass = "";
 
     private $userController = null;
     private $ticketController = null;
