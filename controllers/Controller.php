@@ -13,8 +13,8 @@ class Controller {
     private $dbo;
     private $db_host = "localhost";
     private $db_name = "ticket_tracker"; 
-    private $db_user = "****";
-    private $db_pass = "****";
+    private $db_user = "root";
+    private $db_pass = "root";
 
     private $userController = null;
     private $ticketController = null;
@@ -178,31 +178,32 @@ class Controller {
         $reporterData = $this->userController->getUserById($ticket['reported_by_id']);
         $assignee = $assigneeData['name'];
         $reporter = $reporterData['name'];
-        $dateCreated = date_create($ticket['created_time']);
-        $dateResolved = (isset($ticket['resolved_time'])) ? date_create($ticket['resolved_time']) : "";
+        $timeCreated = date_create($ticket['created_time']);
+        $timeResolved = (isset($ticket['resolved_time'])) ? date_create($ticket['resolved_time']) : "";
         $userPermissionType = Session::getInstance()->__get('user_permission_type');
         echo "permission type: " . $userPermissionType ."<br/>"; // admin, crud, update, view
 
         if(isset($commentInput) && !empty($commentInput)) {
-            echo "comment input is set to: " .  $commentInput;
+            //echo "comment input is set to: " .  $commentInput;
             try {
-               $success = $this->ticketController->addComment($ticketId, $commentInput);
+               $commentAdded = $this->ticketController->addComment($ticketId, $commentInput);
+               if($commentAdded) $ticketTimeUpdated = $this->ticketController->setUpdatedTime($ticketId);
+               // need to pull down the ticket info again
+               if($ticketTimeUpdated) $ticket = $this->ticketController->getTicketById($ticketId);
             }
             catch(Exception $e) {
                 echo 'Caught exception: ',  $e->getMessage(), "\n";
             }
         }
 
+        $timeUpdated = (isset($ticket['updated_time'])) ? date_create($ticket['updated_time']) : "";
+
         $allCommentsData = $this->ticketController->getTicketComments($ticketId);
 
-        echo "there are " .count($allCommentsData) . " tickets";
+        //echo "there are " .count($allCommentsData) . " tickets";
 
         include __DIR__ . '/../templates/view_ticket.php';
     }
-
-    /*public function editTicket() {
-        echo "Controller editTicket";
-    }*/
 
     public function deleteTicket($ticketId) {
         echo "Controller deleteTicket: ".$ticketId;

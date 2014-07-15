@@ -1,4 +1,4 @@
-/**
+	/**
 * Assumptions...only discovered after writing out all the indexes on foreign keys columns below
 * Only the MySQL InnoDB engine supports foreign keys
 * MySQL Innob indexes foreign key colums automatically 
@@ -104,6 +104,7 @@ ALTER TABLE users ALTER COLUMN permission_type_id SET DEFAULT 1;
 
 ALTER TABLE tickets ADD created_date DATETIME NOT NULL;
 ALTER TABLE tickets ADD resolved_date DATETIME;
+ALTER TABLE tickets ADD updated_time DATETIME;
 ALTER TABLE tickets CHANGE created_date created_time DATETIME NOT NULL;
 ALTER TABLE tickets CHANGE resolved_date resolved_time DATETIME;
 
@@ -122,6 +123,7 @@ UPDATE users SET permission_type_id=3 WHERE name='gav';
 UPDATE tickets SET created_time=NOW() WHERE created_time < (NOW() - INTERVAL 10 MINUTE);
 UPDATE tickets SET created_time='2014-07-03 13:03:22' WHERE created_time < (NOW() - INTERVAL 10 MINUTE);
 UPDATE tickets SET created_time=NOW() WHERE id=15;	
+UPDATE tickets SET updated_time=NOW() WHERE id=15;
 
 UPDATE tickets SET status_type_id = 2 WHERE assigned_to_id IS NOT NULL;
 
@@ -171,5 +173,6 @@ SELECT * FROM tickets WHERE created_time < (NOW() - INTERVAL 20 MINUTE);
 
 /*** query table structure ***/
 SHOW CREATE TABLE tickets;
+SHOW CREATE TABLE comments;
 DESCRIBE tickets;
 

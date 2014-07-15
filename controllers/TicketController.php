@@ -77,4 +77,8 @@ class TicketController {
     public function getPriorityTypeById($id) {
         return $this->ticket->getPriorityTypeById($id);
     }
+
+    public function setUpdatedTime($ticketid) {
+        return $this->ticket->setUpdatedTime($ticketid);
+    }
 } 

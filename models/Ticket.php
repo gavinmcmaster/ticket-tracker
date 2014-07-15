@@ -143,11 +143,22 @@ class Ticket {
     }
 
     public function addComment($ticketId, $comment) {
-        $this->dbo->query("INSERT INTO comments (ticket_id, comment, created_time) VALUES (:ticket_id, :comment, NOW())");
+        $this->dbo->query("INSERT INTO comments (ticket_id, comment, created_time, added_by_id) VALUES (:ticket_id, :comment, NOW(), :added_by_id)");
         $this->dbo->bind(':ticket_id', $ticketId);
         $this->dbo->bind(':comment', $comment);
+        $this->dbo->bind(':added_by_id', Session::getInstance()->__get('user_id'));
         $success = $this->dbo->execute();
 
         return $success;
     }
+
+    public function setUpdatedTime($ticketId) {
+        //$this->dbo->query("INSERT INTO tickets (updated_time) VALUES (NOW()) WHERE id = :ticket_id");
+        $this->dbo->query("UPDATE tickets SET updated_time = NOW() WHERE id = :ticket_id");
+        $this->dbo->bind(':ticket_id', $ticketId);
+        $success = $this->dbo->execute();
+
+        return $success;
+    }
+
 } 
