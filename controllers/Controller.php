@@ -114,7 +114,7 @@ class Controller {
         Session::getInstance()->__unset('user_email');
         Session::getInstance()->__unset('user_type_id');
         Session::getInstance()->__unset('user_permission_type');
-        //Session::getInstance()->__unset('permission_type_id');
+        Session::getInstance()->__unset('permission_type_id');
         Session::getInstance()->destroy();
 
         $url = 'http://localhost/training/web/ticket_tracker/index.php';
@@ -180,8 +180,8 @@ class Controller {
         $reporter = $reporterData['name'];
         $timeCreated = date_create($ticket['created_time']);
         $timeResolved = (isset($ticket['resolved_time'])) ? date_create($ticket['resolved_time']) : "";
-        $userPermissionType = Session::getInstance()->__get('user_permission_type');
-        echo "permission type: " . $userPermissionType ."<br/>"; // admin, crud, update, view
+        $userPermissionTypeId = Session::getInstance()->__get('permission_type_id');
+        //echo "permission type: " . $userPermissionType ."<br/>"; // admin, crud, update, view
 
         if(isset($commentInput) && !empty($commentInput)) {
             //echo "comment input is set to: " .  $commentInput;
@@ -209,6 +209,10 @@ class Controller {
         echo "Controller deleteTicket: ".$ticketId;
     }
 
+    public function modifyTicket($ticketId) {
+        echo "Controller modifyTicket: ".$ticketId;
+    }
+
     public function getUserController() {
         return $this->userController;
     }
@@ -224,8 +228,7 @@ class Controller {
         Session::getInstance()->__set('user_type_id', $user['user_type_id']);
         $userPermissionTypeData = $this->userController->getUserPermissionTypeById($user['permission_type_id']);
         Session::getInstance()->__set('user_permission_type', $userPermissionTypeData['type']);
-        // not sure this is needed, or even useful
-        //Session::getInstance()->__set('permission_type_id', $user['permission_type_id']);
+        Session::getInstance()->__set('permission_type_id', $user['permission_type_id']);
 
         $url = 'http://localhost/training/web/ticket_tracker/index.php?action=listTickets';
         header("Location: $url");

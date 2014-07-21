@@ -29,21 +29,23 @@
         </div>
      </div>
     <div class="row">
-        <div class="pull-left">
+        <div class="pull-left"> 
             <h4>Comments</h4>
 
             <?php
-                define('USER_PERMISSION_VIEW', 1);
-
                 if(count($allCommentsData) > 0) {
                     include __DIR__ . '/../templates/comments.php';
                 }
 
-                if($createComment && $userPermissionType != "view") {
+                if($createComment && $userPermissionTypeId != USER_PERMISSION_VIEW) {
                     include __DIR__ . '/../templates/comment_form.php';
                 }
-                else if($userPermissionType != "view") {
+                else if($userPermissionTypeId != USER_PERMISSION_VIEW) {
                    echo "<div><a href="."'http://localhost/training/web/ticket_tracker/index.php?action=viewTicket&id=".$ticketId."&addComment=true#newcomment'"."><button class="."'btn comment'".">Add comment</button></a></div>";
+                }
+
+                if($userPermissionTypeId != USER_PERMISSION_VIEW) {
+                    include __DIR__ . '/../templates/modify_ticket.php'; 
                 }
             ?>
 

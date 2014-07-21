@@ -127,6 +127,15 @@ UPDATE tickets SET updated_time=NOW() WHERE id=15;
 
 UPDATE tickets SET status_type_id = 2 WHERE assigned_to_id IS NOT NULL;
 
+UPDATE user_permission_types SET type='temp' WHERE id=4;
+UPDATE user_permission_types SET type='update' WHERE id=2;
+UPDATE user_permission_types SET type='crud' WHERE id=3;
+UPDATE user_permission_types SET type='admin' WHERE id=4;
+UPDATE users SET permission_type_id=4 WHERE name='gav';
+UPDATE users SET permission_type_id=2 WHERE name='luke';
+UPDATE users SET permission_type_id=3 WHERE name='carlos';
+UPDATE users SET permission_type_id=4 WHERE name='pavel';
+
 /**** all insert *****/
 INSERT INTO users (name, email, password, user_type_id) VALUES ("test", "test@test.com", "password", 1);
 
@@ -174,5 +183,6 @@ SELECT * FROM tickets WHERE created_time < (NOW() - INTERVAL 20 MINUTE);
 /*** query table structure ***/
 SHOW CREATE TABLE tickets;
 SHOW CREATE TABLE comments;
+SHOW CREATE TABLE user_permission_types;
 DESCRIBE tickets;
 
