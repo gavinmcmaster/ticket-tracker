@@ -1,7 +1,10 @@
 <?php include('ui/header.htm') ?>
 <?php
 
+    $id = 0;
+
     require_once 'config.inc.php';
+    require_once 'constants.php';
     // create session...every time ffs
     require_once 'models/Session.php';
     $session = Session::getInstance();

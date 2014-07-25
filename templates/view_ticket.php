@@ -23,27 +23,29 @@
         <div class="pull-right">
             <h4>Dates</h4>
 
-            Created: <?php echo date_format($dateCreated,'d/M/Y H:i' ) ?> <br/>
-            Updated: <br/>
-            Resolved: <?php if(!empty($dateResolved)) echo date_format($dateResolved, 'd/M/Y H:i') ?> <br/>
+            Created: <?php echo date_format($timeCreated,'d/M/Y H:i' ) ?> <br/>
+            Updated: <?php if(!empty($timeUpdated)) echo date_format($timeUpdated, 'd/M/Y H:i') ?> <br/>
+            Resolved: <?php if(!empty($timeResolved)) echo date_format($timeResolved, 'd/M/Y H:i') ?> <br/>
         </div>
      </div>
     <div class="row">
-        <div class="pull-left">
+        <div class="pull-left"> 
             <h4>Comments</h4>
 
             <?php
-                define('USER_PERMISSION_VIEW', 1);
-
                 if(count($allCommentsData) > 0) {
                     include __DIR__ . '/../templates/comments.php';
                 }
 
-                if($createComment && $userPermissionType != "view") {
+                if($createComment && $userPermissionTypeId != USER_PERMISSION_VIEW) {
                     include __DIR__ . '/../templates/comment_form.php';
                 }
-                else if($userPermissionType != "view") {
-                   echo "<div><a href="."'http://ticket_tracker.local/index.php?action=viewTicket&id=".$ticketId."&addComment=true'"."><button class="."'btn comment'".">Add comment</button></a></div>";
+                else if($userPermissionTypeId != USER_PERMISSION_VIEW) {
+                   echo "<div><a href="."'http://localhost/training/web/ticket_tracker/index.php?action=viewTicket&id=".$ticketId."&addComment=true#newcomment'"."><button class="."'btn comment'".">Add comment</button></a></div>";
+                }
+
+                if($userPermissionTypeId != USER_PERMISSION_VIEW) {
+                    include __DIR__ . '/../templates/modify_ticket.php'; 
                 }
             ?>
 

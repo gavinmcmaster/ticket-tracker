@@ -1,4 +1,4 @@
-/**
+	/**
 * Assumptions...only discovered after writing out all the indexes on foreign keys columns below
 * Only the MySQL InnoDB engine supports foreign keys
 * MySQL Innob indexes foreign key colums automatically 
@@ -104,20 +104,37 @@ ALTER TABLE users ALTER COLUMN permission_type_id SET DEFAULT 1;
 
 ALTER TABLE tickets ADD created_date DATETIME NOT NULL;
 ALTER TABLE tickets ADD resolved_date DATETIME;
+ALTER TABLE tickets ADD updated_time DATETIME;
 ALTER TABLE tickets CHANGE created_date created_time DATETIME NOT NULL;
 ALTER TABLE tickets CHANGE resolved_date resolved_time DATETIME;
+
+ALTER TABLE comments CHANGE created_date created_time DATETIME;
+ALTER TABLE comments CHANGE edited_date edited_time DATETIME;
+ALTER TABLE comments ADD added_by_id INT NOT NULL;
+ALTER TABLE comments ADD CONSTRAINT fk_added_by_id FOREIGN KEY (added_by_id) references users (id) ON DELETE NO ACTION;
+
 
 /**** statements that don't work ******/
 DELETE FROM user_types; /* won't work in safe mode without WHERE condition */
 DROP TABLE user_types; /* Cannot delete: a foreign key constraint fails */
 
 /**** update ****/
-UPDATE users SET permission_type_id=4 WHERE name='gav';
+UPDATE users SET permission_type_id=3 WHERE name='gav';
 UPDATE tickets SET created_time=NOW() WHERE created_time < (NOW() - INTERVAL 10 MINUTE);
 UPDATE tickets SET created_time='2014-07-03 13:03:22' WHERE created_time < (NOW() - INTERVAL 10 MINUTE);
-UPDATE tickets SET created_time=NOW() WHERE id=14;	
+UPDATE tickets SET created_time=NOW() WHERE id=15;	
+UPDATE tickets SET updated_time=NOW() WHERE id=15;
 
 UPDATE tickets SET status_type_id = 2 WHERE assigned_to_id IS NOT NULL;
+
+UPDATE user_permission_types SET type='temp' WHERE id=4;
+UPDATE user_permission_types SET type='update' WHERE id=2;
+UPDATE user_permission_types SET type='crud' WHERE id=3;
+UPDATE user_permission_types SET type='admin' WHERE id=4;
+UPDATE users SET permission_type_id=4 WHERE name='gav';
+UPDATE users SET permission_type_id=2 WHERE name='luke';
+UPDATE users SET permission_type_id=3 WHERE name='carlos';
+UPDATE users SET permission_type_id=4 WHERE name='pavel';
 
 /**** all insert *****/
 INSERT INTO users (name, email, password, user_type_id) VALUES ("test", "test@test.com", "password", 1);
@@ -158,11 +175,14 @@ SELECT * FROM ticket_types;
 SELECT * FROM ticket_priority_types;
 SELECT * FROM ticket_status_types;
 SELECT * from ticket_resolution_types;
+SELECT * from comments;
 
 SELECT * FROM users WHERE id=14; 
 SELECT * FROM tickets WHERE created_time < (NOW() - INTERVAL 20 MINUTE); 
 
 /*** query table structure ***/
 SHOW CREATE TABLE tickets;
+SHOW CREATE TABLE comments;
+SHOW CREATE TABLE user_permission_types;
 DESCRIBE tickets;
 
