@@ -24,7 +24,7 @@
                         <?php
                         $assigneeId = $assigneeData['id'];
                         if(!isset($assigneeId)) echo "<option value=0></option>";
-                        echo "assignee is " .$assigneeId['id']. " - " . $assigneeData['name'] . "<br/>";
+                        echo "assignee is " .$assigneeData['id']. " - " . $assigneeData['name'] . "<br/>";
                         foreach($allUsers as $user) {
                             $output = (isset($assigneeId) && $assigneeId == $user['id'])
                                 ?  "<option value='".$user['id']."' selected>".$user['name']."</option>"

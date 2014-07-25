@@ -61,9 +61,8 @@ class Controller {
 
                 $modify = isset($_POST['modify']);
 
-                echo "modify ticket before displaying: " . $modify;
-
                 if($modify) {
+                    echo "modify ticket before displaying"."<br/>";
                     $resolutionId = (!empty($_POST['resolutionType']))? (int)$_POST['resolutionType'] : null;
                     $assignToId = (!empty($_POST['assignTo']))? (int)$_POST['assignTo'] : null;
                     $ticketTypeId = (!empty($_POST['ticketType']))? (int)$_POST['ticketType'] : null;
@@ -157,7 +156,7 @@ class Controller {
                 echo "createTicket success: " . $success;
                 if($success) {
                     $ticketId = $this->ticketController->getLastInsertId();
-                    $url = 'http://ticket_tracker.local/index.php?action=viewTicket?id='.$ticketId;
+                    $url = 'http://ticket_tracker.local/index.php?action=viewTicket&id='.$ticketId;
                     header("Location: $url");
                     die();
                 }

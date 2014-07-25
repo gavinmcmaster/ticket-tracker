@@ -1,19 +1,11 @@
 <?php include('ui/header.htm') ?>
 <?php
 
-    $id = 0;
-
     require_once 'config.inc.php';
     require_once 'constants.php';
     // create session...every time ffs
     require_once 'models/Session.php';
     $session = Session::getInstance();
-
-    //echo "username set in session:". $session->__isset('username');
-
-    /*if($session->__isset('username')) {
-        echo("Hello " . $session->__get('username'));
-    }*/
 
     require_once 'models/Database.php';
     require_once 'models/User.php';
