@@ -13,8 +13,8 @@ class Controller {
     private $dbo;
     private $db_host = "localhost";
     private $db_name = "ticket_tracker"; 
-    private $db_user = "";
-    private $db_pass = "";
+    private $db_user = "root";
+    private $db_pass = "gav1n";
 
     private $userController = null;
     private $ticketController = null;
@@ -252,6 +252,8 @@ class Controller {
                 $url = 'http://ticket_tracker.local/index.php?action=viewTicket&id='.$ticketId;
                 header("Location: $url");
                 die();
+            }
+        }
     }
 
     public function getUserController() {
