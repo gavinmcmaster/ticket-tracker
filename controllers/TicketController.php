@@ -49,6 +49,10 @@ class TicketController {
         return $this->ticket->fetchAllTickets();
     }
 
+    public function fetchAllTicketsAssignedToUser($userId) {
+        return $this->ticket->fetchAllTicketsAssignedToUser($userId);
+    }
+
     public function fetchTicketTypes() {
         return $this->ticket->fetchTicketTypes();
     }

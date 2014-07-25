@@ -8,17 +8,17 @@
 
                     <div class="pull-left">
                         <h5>Actions</h5>
-                        Resolve as:
+                        <!--Resolve as:
                         <select class="form-control"name="resolutionType">
                             <option value=0></option>
                         <?php
-                            foreach($resolutionTypes as $resolutionType) {
+/*                            foreach($resolutionTypes as $resolutionType) {
                                 echo "<option value=".$resolutionType['id'].">".$resolutionType['type']."</option>";
                             }
-                        ?>
+                        */?>
                         </select>
 
-                        <br/>
+                        <br/>-->
                         Reassign to:
                         <select class="form-control"name="assignTo">
                         <?php

@@ -12,6 +12,10 @@ body {
     margin: 60px 0;
 }
 
+.resolved  {
+    background: #999999;
+}
+
 /*
 .input-description {
     width: 400px !important;

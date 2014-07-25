@@ -71,6 +71,7 @@
 
                 if($userPermissionTypeId != USER_PERMISSION_VIEW && !$ticketIsResolved) {
                     include __DIR__ . '/../templates/modify_ticket.php'; 
+                    include __DIR__ . '/../templates/resolve_ticket.php';
                 }
             ?>
 

@@ -24,6 +24,17 @@ class Ticket {
         return $result;
     }
 
+    public function fetchAllTicketsAssignedToUser($userId) {
+        $this->dbo->query("SELECT * FROM tickets WHERE assigned_to_id = :user_id");
+        $this->dbo->bind(':user_id', $userId);
+        $this->dbo->execute();
+        $result = $this->dbo->fetchAll();
+
+        //echo "Ticket " . count($result);
+
+        return $result;
+    }
+
     public function fetchTicketTypes() {
         $this->dbo->query("SELECT * FROM ticket_types");
         $this->dbo->execute();
