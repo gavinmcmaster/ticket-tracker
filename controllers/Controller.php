@@ -13,8 +13,8 @@ class Controller {
     private $dbo;
     private $db_host = "localhost";
     private $db_name = "ticket_tracker"; 
-    private $db_user = "****";
-    private $db_pass = "*****";
+    private $db_user = "root";
+    private $db_pass = "gav1n";
 
     private $userController = null;
     private $ticketController = null;
@@ -58,16 +58,20 @@ class Controller {
                 break;
             case "viewTicket":
                 $ticketId = $_GET['id'];
-
                 $modify = isset($_POST['modify']);
+                $reopen = isset($_POST['reopen']);
 
                 if($modify) {
-                    echo "modify ticket before displaying"."<br/>";
+                    //echo "modify ticket before displaying"."<br/>";
                     $resolutionId = (!empty($_POST['resolutionType']))? (int)$_POST['resolutionType'] : null;
                     $assignToId = (!empty($_POST['assignTo']))? (int)$_POST['assignTo'] : null;
                     $ticketTypeId = (!empty($_POST['ticketType']))? (int)$_POST['ticketType'] : null;
                     $priorityTypeId = (!empty($_POST['priorityType']))? (int)$_POST['priorityType'] : null;
                     $this->modifyTicket($ticketId, $resolutionId, $assignToId, $ticketTypeId, $priorityTypeId);
+                }
+
+                if($reopen) {
+                    $this->reopenTicket($ticketId);
                 }
 
                 $createComment = isset($_GET['addComment']) ? $_GET['addComment'] : null;
@@ -198,25 +202,31 @@ class Controller {
 
         $resolutionTypes = $this->ticketController->fetchResolutionTypes();
         $allUsers = $this->userController->fetchAllUsers();
-
         $ticketTypes = $this->ticketController->fetchTicketTypes();
-
-        //$allOtherUsers = array();
-        /*$userID = Session::getInstance()->__get('user_id');
-        echo "user id: " . $userID . "<br/>";
-        foreach($allUsers as $user) {
-            if($userID != $user['id']) array_push($allOtherUsers, $user);
-        }*/
-
         $priorityTypes = $this->ticketController->fetchPriorityTypes();
+        $ticketIsResolved = isset($ticket['resolution_type_id']);
+
+        if($ticketIsResolved) {
+            try {
+                $resolvedAsData =  $this->ticketController->getResolutionTypeById($ticket['resolution_type_id']);
+                $resolvedAs = $resolvedAsData['type'];
+            }
+            catch(Exception $e) {
+                echo 'Caught exception: ',  $e->getMessage(), "\n";
+            }
+        }
 
         if(isset($commentInput) && !empty($commentInput)) {
             //echo "comment input is set to: " .  $commentInput;
             try {
                $commentAdded = $this->ticketController->addComment($ticketId, $commentInput);
-               if($commentAdded) $ticketTimeUpdated = $this->ticketController->setUpdatedTime($ticketId);
+               if($commentAdded) {
+                   $ticketTimeUpdated = $this->ticketController->setUpdatedTime($ticketId);
+               }
                // need to pull down the ticket info again
-               if($ticketTimeUpdated) $ticket = $this->ticketController->getTicketById($ticketId);
+               if($ticketUpdatedTime) {
+                   $ticket = $this->ticketController->getTicketById($ticketId);
+               }
             }
             catch(Exception $e) {
                 echo 'Caught exception: ',  $e->getMessage(), "\n";
@@ -227,8 +237,6 @@ class Controller {
 
         $allCommentsData = $this->ticketController->getTicketComments($ticketId);
 
-        //echo "there are " .count($allCommentsData) . " tickets";
-
         include __DIR__ . '/../templates/view_ticket.php';
     }
 
@@ -237,22 +245,88 @@ class Controller {
     }*/
 
     public function modifyTicket($ticketId, $resolutionId, $assignToId, $ticketTypeId, $priorityTypeId) {
-        echo "Controller modifyTicket: ".$ticketId . " - " .$resolutionId . " - " . gettype($resolutionId);
+        echo "Controller modifyTicket: ".$ticketId . " - " .$resolutionId . "<br/>";
         $updated = false;
 
-
-
         if(is_int($resolutionId) && $resolutionId > 0) {
-            $success = $this->ticketController->setResolved($ticketId, $resolutionId);
+
+            try {
+                $success = $this->ticketController->setResolved($ticketId, $resolutionId);
+                if($success) {
+
+                    try {
+                        $ticketUpdatedTime = $this->ticketController->setUpdatedTime($ticketId);
+                        $ticketResolvedTime = $this->ticketController->setResolvedTime($ticketId);
+                    }
+                    catch(Exception $e) {
+                        echo 'Caught exception: ',  $e->getMessage(), "\n";
+                    }
+
+                    // if resolution has been set then ignore any other modifications
+                    $url = 'http://ticket_tracker.local/index.php?action=viewTicket&id='.$ticketId;
+                    header("Location: $url");
+                    die();
+                }
+            }
+            catch(Exception $e) {
+                echo 'Caught exception: ',  $e->getMessage(), "\n";
+            }
+        }
+
+        if(is_int($assignToId) && $assignToId > 0) {
+            try {
+                $assignToSet = $this->ticketController->setAssignedTo($ticketId, $assignToId);
+                if($assignToSet) {
+                    $updated = true;
+                }
+            }
+            catch(Exception $e) {
+                echo 'Caught exception: ',  $e->getMessage(), "\n";
+            }
+        }
+
+        if(is_int($ticketTypeId) && $ticketTypeId > 0) {
+            try {
+                $ticketTypeSet = $this->ticketController->setTicketType($ticketId, $ticketTypeId);
+                if($ticketTypeSet) {
+                    $updated = true;
+                }
+            }
+            catch(Exception $e) {
+                echo 'Caught exception: ',  $e->getMessage(), "\n";
+            }
+        }
+
+        if(is_int($priorityTypeId) && $priorityTypeId > 0) {
+            try {
+                $priorityTypeSet = $this->ticketController->setPriorityType($ticketId, $priorityTypeId);
+                if($ticketTypeSet) {
+                    $updated = true;
+                }
+            }
+            catch(Exception $e) {
+                echo 'Caught exception: ',  $e->getMessage(), "\n";
+            }
+        }
+    }
+
+    public function reopenTicket($ticketId) {
+        echo "Controller reopenTicket ". $ticketId;
+
+        try {
+            $success = $this->ticketController->setUnresolved($ticketId);
 
             if($success) {
-                $ticketTimeUpdated = $this->ticketController->setUpdatedTime($ticketId);
-
-                // if resolution has been set then ignore any other modifications
-                $url = 'http://ticket_tracker.local/index.php?action=viewTicket&id='.$ticketId;
-                header("Location: $url");
-                die();
+                try {
+                    $unsetResolvedTime = $this->ticketController->unsetResolvedTime($ticketId);
+                }
+                catch(Exception $e) {
+                    echo 'Caught exception: ',  $e->getMessage(), "\n";
+                }
             }
+        }
+        catch(Exception $e) {
+            echo 'Caught exception: ',  $e->getMessage(), "\n";
         }
     }
 

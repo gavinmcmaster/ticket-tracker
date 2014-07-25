@@ -1,13 +1,38 @@
 <div class="view_ticket">
     <div>
-        <h3><?php echo "#". $ticketId. " ". $ticket['title'] ?></h3>
+        <h3><?php echo "#". $ticketId. " ". $ticket['title']?>
+        <?php
+            if($ticketIsResolved) {
+                echo " <i>(resolved)</i>";
+            }
+        ?>
+        </h3>
     </div>
+
+    <div>
+        <?php
+            if($ticketIsResolved) {
+
+                $output = "<form role='form' method='post' action='index.php?action=viewTicket&id=".$ticketId ."'>";
+                $output .= "<button type='submit' class='btn btn-default'>Reopen issue</button>";
+                $output .=  "<input type='hidden' name='reopen' value='1' />";
+                $output .= "</form>";
+
+                echo $output;
+            }
+        ?>
+    </div>
+
     <div class="row">
         <div class="pull-left">
             <h4>Details</h4>
             Type:   <?php echo $ticketType ?> <br/>
             Priority: <?php echo $priorityType ?> <br/>
-
+            <?php
+                if($ticketIsResolved) {
+                    echo "Resolved as: ".$resolvedAs."<br/>";
+                }
+            ?>
         </div>
         <div class="pull-right">
             <h4>People</h4>
@@ -40,11 +65,11 @@
                 if($createComment && $userPermissionTypeId != USER_PERMISSION_VIEW) {
                     include __DIR__ . '/../templates/comment_form.php';
                 }
-                else if($userPermissionTypeId != USER_PERMISSION_VIEW) {
+                else if($userPermissionTypeId != USER_PERMISSION_VIEW && !$ticketIsResolved) {
                    echo "<div><a href="."'http://ticket_tracker.local/index.php?action=viewTicket&id=".$ticketId."&addComment=true#newcomment'"."><button class="."'btn comment'".">Add comment</button></a></div>";
                 }
 
-                if($userPermissionTypeId != USER_PERMISSION_VIEW) {
+                if($userPermissionTypeId != USER_PERMISSION_VIEW && !$ticketIsResolved) {
                     include __DIR__ . '/../templates/modify_ticket.php'; 
                 }
             ?>

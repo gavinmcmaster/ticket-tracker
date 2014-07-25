@@ -23,8 +23,9 @@
                         <select class="form-control"name="assignTo">
                         <?php
                         $assigneeId = $assigneeData['id'];
-                        if(!isset($assigneeId)) echo "<option value=0></option>";
-                        echo "assignee is " .$assigneeData['id']. " - " . $assigneeData['name'] . "<br/>";
+                        if(!isset($assigneeId)) {
+                            echo "<option value=0></option>";
+                        }
                         foreach($allUsers as $user) {
                             $output = (isset($assigneeId) && $assigneeId == $user['id'])
                                 ?  "<option value='".$user['id']."' selected>".$user['name']."</option>"
@@ -72,7 +73,9 @@
                 <input type="hidden" name="modify" value="1" />
 
                 <div>
-                    <button type="submit" class="btn btn-default">Submit changes</button>
+                    <?php
+                        echo "<button type='submit' class='btn btn-default'>Submit changes</button>";
+                    ?>
                 </div>
             </div>
         </div>

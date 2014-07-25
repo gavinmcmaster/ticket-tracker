@@ -132,6 +132,15 @@ class Ticket {
         return $result;
     }
 
+    public function getResolutionTypeById($id) {
+        $this->dbo->query("SELECT * FROM ticket_resolution_types WHERE id = :id");
+        $this->dbo->bind(':id', $id);
+        $this->dbo->execute();
+        $result = $this->dbo->fetch();
+
+        return $result;
+    }
+
     private function getStatusTypeByName($name) {
         $this->dbo->query("SELECT * FROM ticket_status_types WHERE type = :type");
         $this->dbo->bind(':type', $name);
@@ -161,7 +170,6 @@ class Ticket {
     }
 
     public function setUpdatedTime($ticketId) {
-        //$this->dbo->query("INSERT INTO tickets (updated_time) VALUES (NOW()) WHERE id = :ticket_id");
         $this->dbo->query("UPDATE tickets SET updated_time = NOW() WHERE id = :ticket_id");
         $this->dbo->bind(':ticket_id', $ticketId);
         $success = $this->dbo->execute();
@@ -170,9 +178,60 @@ class Ticket {
     }
 
     public function setResolved($ticketId, $resolutionId) {
-        $this->dbo->query("UPDATE tickets SET resolution_type_id = :resolution_id WHERE id = ticket_id");
-        $this->dbo->bind(':id', $$ticketId);
-        $this->dbo->bind(':resolution_type_id', $resolutionId);
+        $this->dbo->query("UPDATE tickets SET resolution_type_id = :resolution_id WHERE id = :ticket_id");
+        $this->dbo->bind(':ticket_id', $ticketId);
+        $this->dbo->bind(':resolution_id', $resolutionId);
+        $success = $this->dbo->execute();
+
+        return $success;
+    }
+
+    public function setResolvedTime($ticketId) {
+        $this->dbo->query("UPDATE tickets SET resolved_time = NOW() WHERE id = :ticket_id");
+        $this->dbo->bind(':ticket_id', $ticketId);
+        $success = $this->dbo->execute();
+
+        return $success;
+    }
+
+    public function setUnresolved($ticketId) {
+        $this->dbo->query("UPDATE tickets SET resolution_type_id = null WHERE id = :ticket_id");
+        $this->dbo->bind(':ticket_id', $ticketId);
+        $success = $this->dbo->execute();
+
+        return $success;
+    }
+
+    public function unsetResolvedTime($ticketId) {
+        $this->dbo->query("UPDATE tickets SET resolved_time = null WHERE id = :ticket_id");
+        $this->dbo->bind(':ticket_id', $ticketId);
+        $success = $this->dbo->execute();
+
+        return $success;
+    }
+
+    public function setAssignedTo($ticketId, $userId) {
+        $this->dbo->query("UPDATE tickets SET assigned_to_id = :assigned_to_id WHERE id = :ticket_id");
+        $this->dbo->bind(':assigned_to_id', $userId);
+        $this->dbo->bind(':ticket_id', $ticketId);
+        $success = $this->dbo->execute();
+
+        return $success;
+    }
+
+    public function setTicketType($ticketId, $typeId) {
+        $this->dbo->query("UPDATE tickets SET type_id = :type_id WHERE id = :ticket_id");
+        $this->dbo->bind(':type_id', $typeId);
+        $this->dbo->bind(':ticket_id', $ticketId);
+        $success = $this->dbo->execute();
+
+        return $success;
+    }
+
+    public function setPriorityType($ticketId, $priorityTypeId) {
+        $this->dbo->query("UPDATE tickets SET priority_type_id = :priority_type_id WHERE id = :ticket_id");
+        $this->dbo->bind(':ticket_id', $ticketId);
+        $this->dbo->bind(':priority_type_id', $priorityTypeId);
         $success = $this->dbo->execute();
 
         return $success;

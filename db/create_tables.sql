@@ -170,7 +170,8 @@ TRUNCATE users;
 SELECT * FROM users;
 SELECT * FROM user_types;
 SELECT * FROM user_permission_types;
-SELECT * FROM tickets;
+
+SELECT * FROM tickets;	
 SELECT * FROM ticket_types;
 SELECT * FROM ticket_priority_types;
 SELECT * FROM ticket_status_types;
