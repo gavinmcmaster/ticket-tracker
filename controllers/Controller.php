@@ -58,6 +58,19 @@ class Controller {
                 break;
             case "viewTicket":
                 $ticketId = $_GET['id'];
+
+                $modify = isset($_POST['modify']);
+
+                echo "modify ticket before displaying: " . $modify;
+
+                if($modify) {
+                    $resolutionId = (!empty($_POST['resolutionType']))? (int)$_POST['resolutionType'] : null;
+                    $assignToId = (!empty($_POST['assignTo']))? (int)$_POST['assignTo'] : null;
+                    $ticketTypeId = (!empty($_POST['ticketType']))? (int)$_POST['ticketType'] : null;
+                    $priorityTypeId = (!empty($_POST['priorityType']))? (int)$_POST['priorityType'] : null;
+                    $this->modifyTicket($ticketId, $resolutionId, $assignToId, $ticketTypeId, $priorityTypeId);
+                }
+
                 $createComment = isset($_GET['addComment']) ? $_GET['addComment'] : null;
                 $commentInput = (!empty($_POST['commentInput'])) ? $_POST['commentInput'] : null;
                 $this->viewTicket($ticketId, $createComment, $commentInput);
@@ -181,7 +194,21 @@ class Controller {
         $timeCreated = date_create($ticket['created_time']);
         $timeResolved = (isset($ticket['resolved_time'])) ? date_create($ticket['resolved_time']) : "";
         $userPermissionTypeId = Session::getInstance()->__get('permission_type_id');
-        //echo "permission type: " . $userPermissionType ."<br/>"; // admin, crud, update, view
+        //echo "permission type: " . $userPermissionTypeId ."<br/>"; // admin, crud, update, view
+
+        $resolutionTypes = $this->ticketController->fetchResolutionTypes();
+        $allUsers = $this->userController->fetchAllUsers();
+
+        $ticketTypes = $this->ticketController->fetchTicketTypes();
+
+        //$allOtherUsers = array();
+        /*$userID = Session::getInstance()->__get('user_id');
+        echo "user id: " . $userID . "<br/>";
+        foreach($allUsers as $user) {
+            if($userID != $user['id']) array_push($allOtherUsers, $user);
+        }*/
+
+        $priorityTypes = $this->ticketController->fetchPriorityTypes();
 
         if(isset($commentInput) && !empty($commentInput)) {
             //echo "comment input is set to: " .  $commentInput;
@@ -209,8 +236,22 @@ class Controller {
         echo "Controller deleteTicket: ".$ticketId;
     }
 
-    public function modifyTicket($ticketId) {
-        echo "Controller modifyTicket: ".$ticketId;
+    public function modifyTicket($ticketId, $resolutionId, $assignToId, $ticketTypeId, $priorityTypeId) {
+        echo "Controller modifyTicket: ".$ticketId . " - " .$resolutionId . " - " . gettype($resolutionId);
+        $updated = false;
+
+
+
+        if(is_int($resolutionId) && $resolutionId > 0) {
+            $success = $this->ticketController->setResolved($ticketId, $resolutionId);
+
+            if($success) {
+                $ticketTimeUpdated = $this->ticketController->setUpdatedTime($ticketId);
+
+                // if resolution has been set then ignore any other modifications
+                $url = 'http://ticket_tracker.local/index.php?action=viewTicket&id='.$ticketId;
+                header("Location: $url");
+                die();
     }
 
     public function getUserController() {
@@ -226,8 +267,8 @@ class Controller {
         Session::getInstance()->__set('user_name', $user['name']);
         Session::getInstance()->__set('user_email', $user['email']);
         Session::getInstance()->__set('user_type_id', $user['user_type_id']);
-        $userPermissionTypeData = $this->userController->getUserPermissionTypeById($user['permission_type_id']);
-        Session::getInstance()->__set('user_permission_type', $userPermissionTypeData['type']);
+        //$userPermissionTypeData = $this->userController->getUserPermissionTypeById($user['permission_type_id']);
+        //Session::getInstance()->__set('user_permission_type', $userPermissionTypeData['type']);
         Session::getInstance()->__set('permission_type_id', $user['permission_type_id']);
 
         $url = 'http://localhost/training/web/ticket_tracker/index.php?action=listTickets';

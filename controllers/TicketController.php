@@ -55,7 +55,10 @@ class TicketController {
 
     public function fetchPriorityTypes() {
         return $this->ticket->fetchPriorityTypes();
+    }
 
+    public function fetchResolutionTypes() {
+        return $this->ticket->fetchResolutionTypes();
     }
 
     public function getLastInsertId() {
@@ -81,4 +84,8 @@ class TicketController {
     public function setUpdatedTime($ticketid) {
         return $this->ticket->setUpdatedTime($ticketid);
     }
-} 
+
+    public function setResolved($ticketId, $resolutionId) {
+        return $this->ticket->setResolved($ticketId, $resolutionId);
+    }
+}

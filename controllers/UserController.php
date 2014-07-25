@@ -39,12 +39,12 @@ class UserController {
         if(isset($_POST['userType'])) $userTypeID = $_POST['userType'];
 
         if(!is_int($userTypeID)) $userTypeID = (int)$userTypeID;
-        echo " " . $username . " - " .$email . ' - ' . $password . " - " . $userTypeID . " - " . is_int($userTypeID);
+        //echo " " . $username . " - " .$email . ' - ' . $password . " - " . $userTypeID . " - " . is_int($userTypeID);
 
         if(isset($username) && isset($email) && isset($password) && isset($userTypeID) && is_int($userTypeID)) {
-            echo " - add " .$username . " to the db";
+            //echo " - add " .$username . " to the db";
             //$password = md5($salt.$password);
-            $this->user->insert($username, $email, md5($this->config->salt.$password), $userTypeID);
+            return $this->user->insert($username, $email, md5($this->config->salt.$password), $userTypeID);
         }
 
         return false;

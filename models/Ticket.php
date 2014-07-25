@@ -44,6 +44,14 @@ class Ticket {
         return $result;
     }
 
+    public function fetchResolutionTypes() {
+        $this->dbo->query("SELECT * FROM ticket_resolution_types");
+        $this->dbo->execute();
+        $result = $this->dbo->fetchAll();
+
+        return $result;
+    }
+
     public function insert($type_id, $title, $description, $reportedById, $ticketPriorityTypeId, $assignedToId) {
         //echo "Ticket insert ".$type_id." - ".$title." - ".$description." - ".$reportedById." - " .$ticketPriorityTypeId." - ".$assignedToId;
         //  echo "<br/>";
@@ -161,4 +169,12 @@ class Ticket {
         return $success;
     }
 
-} 
+    public function setResolved($ticketId, $resolutionId) {
+        $this->dbo->query("UPDATE tickets SET resolution_type_id = :resolution_id WHERE id = ticket_id");
+        $this->dbo->bind(':id', $$ticketId);
+        $this->dbo->bind(':resolution_type_id', $resolutionId);
+        $success = $this->dbo->execute();
+
+        return $success;
+    }
+}
