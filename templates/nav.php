@@ -3,12 +3,12 @@
     $session = Session::getInstance();
 
     if($session->__isset('user_name')) { ?>
-        <a href="http://ticket_tracker.local/index.php?action=logout"><button class="btn logout">Logout</button></a>
-        <a href="http://ticket_tracker.local/index.php?action=listTickets"><button class="btn list_tickets">List Tickets</button></a>
+        <a href="http://localhost/training/web/ticket_tracker/index.php?action=logout"><button class="btn logout">Logout</button></a>
+        <a href="http://localhost/training/web/ticket_tracker/index.php?action=listTickets"><button class="btn list_tickets">List Tickets</button></a>
         <?php
              $userPermissionTypeId = Session::getInstance()->__get('permission_type_id');
              if($userPermissionTypeId != USER_PERMISSION_VIEW && $userPermissionTypeId != USER_PERMISSION_UPDATE){
-                echo "<a href='http://ticket_tracker.local/index.php?action=createTicket'><button class='btn create_ticket'>Create Ticket</button></a>";
+                echo "<a href='http://localhost/training/web/ticket_tracker/index.php?action=createTicket'><button class='btn create_ticket'>Create Ticket</button></a>";
              }
        } else { ?>
 
