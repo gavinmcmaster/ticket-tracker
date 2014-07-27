@@ -49,13 +49,20 @@ class TicketController {
         return $this->ticket->fetchAllTickets();
     }
 
+    public function fetchAllTicketsAssignedToUser($userId) {
+        return $this->ticket->fetchAllTicketsAssignedToUser($userId);
+    }
+
     public function fetchTicketTypes() {
         return $this->ticket->fetchTicketTypes();
     }
 
     public function fetchPriorityTypes() {
         return $this->ticket->fetchPriorityTypes();
+    }
 
+    public function fetchResolutionTypes() {
+        return $this->ticket->fetchResolutionTypes();
     }
 
     public function getLastInsertId() {
@@ -78,7 +85,39 @@ class TicketController {
         return $this->ticket->getPriorityTypeById($id);
     }
 
+    public function getResolutionTypeById($id) {
+        return $this->ticket->getResolutionTypeById($id);
+    }
+
     public function setUpdatedTime($ticketid) {
         return $this->ticket->setUpdatedTime($ticketid);
     }
-} 
+
+    public function setResolved($ticketId, $resolutionId) {
+        return $this->ticket->setResolved($ticketId, $resolutionId);
+    }
+
+    public function setResolvedTime($ticketid) {
+        return $this->ticket->setResolvedTime($ticketid);
+    }
+
+    public function setUnresolved($ticketId) {
+        return $this->ticket->setUnresolved($ticketId);
+    }
+
+    public function unsetResolvedTime($ticketId) {
+        return $this->ticket->unsetResolvedTime($ticketId);
+    }
+
+    public function setAssignedTo($ticketId, $userId) {
+        return $this->ticket->setAssignedTo($ticketId, $userId);
+    }
+
+    public function setTicketType($ticketId, $typeId) {
+        return $this->ticket->setTicketType($ticketId, $typeId);
+    }
+
+    public function setPriorityType($ticketId, $priorityTypeId) {
+        return $this->ticket->setPriorityType($ticketId, $priorityTypeId);
+    }
+}
