@@ -62,6 +62,10 @@ class Controller {
                 $resolve = isset($_POST['resolve']);
                 $reopen = isset($_POST['reopen']);
 
+                if(isset( $_POST['editComment'])) {   
+                    echo "edit comment: ". $_POST['editComment'];
+                }
+
                 //echo "ticket " . $ticketId . ", modify " . $modify . ", resolve " . $resolve . ", reopen " . $reopen . "<br/>";
 
                 if($modify) {
