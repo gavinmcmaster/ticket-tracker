@@ -13,8 +13,8 @@ class Controller {
     private $dbo;
     private $db_host = "localhost";
     private $db_name = "ticket_tracker"; 
-    private $db_user = "****";
-    private $db_pass = "****";
+    private $db_user = "root";
+    private $db_pass = "root";
 
     private $userController = null;
     private $ticketController = null;
@@ -61,10 +61,7 @@ class Controller {
                 $modify = isset($_POST['modify']);
                 $resolve = isset($_POST['resolve']);
                 $reopen = isset($_POST['reopen']);
-
-                if(isset( $_POST['editComment'])) {   
-                    echo "edit comment: ". $_POST['editComment'];
-                }
+                $editComment = isset($_POST['editComment']) ? $_POST['editComment'] : null;
 
                 //echo "ticket " . $ticketId . ", modify " . $modify . ", resolve " . $resolve . ", reopen " . $reopen . "<br/>";
 
@@ -86,8 +83,9 @@ class Controller {
                 }
 
                 $createComment = isset($_GET['addComment']) ? $_GET['addComment'] : null;
-                $commentInput = (!empty($_POST['commentInput'])) ? $_POST['commentInput'] : null;
-                $this->viewTicket($ticketId, $createComment, $commentInput);
+
+                $commentInput = (!empty($_POST['commentInput']) && (!isset($_POST['cancel_edit']))) ? $_POST['commentInput'] : null;
+                $this->viewTicket($ticketId, $createComment, $commentInput, $editComment);
                 break;
             case "deleteTicket":
                 $ticketId = $_GET['id'];
@@ -200,7 +198,7 @@ class Controller {
         include __DIR__ . '/../templates/create_ticket.php';
     }
 
-    public function viewTicket($ticketId, $createComment, $commentInput) {
+    public function viewTicket($ticketId, $createComment, $commentInput, $editComment) {
         //echo "Controller viewTicket ".$ticketId;
         $ticket = $this->ticketController->getTicketById($ticketId);
         $ticketTypeData = $this->ticketController->getTicketTypeById($ticket['type_id']);
@@ -252,6 +250,14 @@ class Controller {
         $timeUpdated = (isset($ticket['updated_time'])) ? date_create($ticket['updated_time']) : "";
 
         $allCommentsData = $this->ticketController->getTicketComments($ticketId);
+
+        if(isset($editComment)) {   
+            $editComment = (int)$editComment;
+        }
+
+        if(isset($_POST['submit_comment_edit'])) {
+            echo "edit comment with id: " . $_POST['submit_comment_edit'];
+        }
 
         include __DIR__ . '/../templates/view_ticket.php';
     }
