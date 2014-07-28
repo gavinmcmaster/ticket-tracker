@@ -69,7 +69,7 @@ class UserController {
     public function fetchAllUsers() {
         return $this->user->fetchAllUsers();
     }
+ }
 
-}
 
 

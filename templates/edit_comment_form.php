@@ -1,6 +1,10 @@
 <div class="span12">
 	<?php  echo "<span id='comment:".$commentNum."'><a href='#comment:".$commentNum."''>comment".$commentNum."</a></span>"; ?>
+<<<<<<< HEAD
 	<form role="form" class="view_ticket" id='editcomment' action="index.php?action=viewTicket&id=<?php echo $ticketId ?>#comment:<?php echo $commentNum ?>"  method="post">
+=======
+	<form role="form" class="view_ticket" id='updateComment' action="index.php?action=viewTicket&id=<?php echo $ticketId ?>#comment:<?php echo $commentNum ?>"  method="post">
+>>>>>>> 8bdbb7e... sorts edit ticket comment feature
 	    <div class="form-group description">
 	        <textarea class="field span8" id="textarea" rows="8" name="commentInput"><?php echo $comment['comment']; ?></textarea>
 	    </div>

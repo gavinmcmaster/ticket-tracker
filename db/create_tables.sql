@@ -112,7 +112,8 @@ ALTER TABLE comments CHANGE created_date created_time DATETIME;
 ALTER TABLE comments CHANGE edited_date edited_time DATETIME;
 ALTER TABLE comments ADD added_by_id INT NOT NULL;
 ALTER TABLE comments ADD CONSTRAINT fk_added_by_id FOREIGN KEY (added_by_id) references users (id) ON DELETE NO ACTION;
-
+ALTER TABLE comments ADD last_edited_by_id INT;
+ALTER TABLE comments ADD CONSTRAINT fk_last_edited_by_id FOREIGN KEY (last_edited_by_id) references users (id) ON DELETE NO ACTION;
 
 /**** statements that don't work ******/
 DELETE FROM user_types; /* won't work in safe mode without WHERE condition */

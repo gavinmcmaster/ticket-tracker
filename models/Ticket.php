@@ -247,4 +247,30 @@ class Ticket {
 
         return $success;
     }
+
+    public function updateComment($commentId, $comment) {
+        $this->dbo->query("UPDATE comments SET comment = :comment WHERE id= :comment_id");
+        $this->dbo->bind(':comment', $comment);
+        $this->dbo->bind(':comment_id', $commentId);
+        $success = $this->dbo->execute();
+
+        return $success;
+    }
+
+    public function setCommentUpdatedTime($commentId) {
+        $this->dbo->query("UPDATE comments SET edited_time = NOW() WHERE id = :comment_id");
+        $this->dbo->bind(':comment_id', $commentId);
+        $success = $this->dbo->execute();
+
+        return $success;
+    }
+
+    public function setCommentUpdatedBy($commentId, $userId) {
+        $this->dbo->query("UPDATE comments SET last_edited_by_id = :user_id WHERE id = :comment_id");
+        $this->dbo->bind(':user_id', $userId);
+        $this->dbo->bind(':comment_id', $commentId);
+        $success = $this->dbo->execute();
+
+        return $success;
+    }
 }
