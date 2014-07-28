@@ -13,8 +13,8 @@ class Controller {
     private $dbo;
     private $db_host = "localhost";
     private $db_name = "ticket_tracker"; 
-    private $db_user = "****";
-    private $db_pass = "*****";
+    private $db_user = "root";
+    private $db_pass = "gav1n";
 
     private $userController = null;
     private $ticketController = null;
@@ -61,6 +61,11 @@ class Controller {
                 $modify = isset($_POST['modify']);
                 $resolve = isset($_POST['resolve']);
                 $reopen = isset($_POST['reopen']);
+                $editComment = isset($_POST['editComment']) ? $_POST['editComment'] : null;
+                $updateComment = isset($_POST['submit_comment_edit']) ? $_POST['submit_comment_edit'] : null;
+
+                //echo "edit comment: " . $editComment . "<br/>";
+                //echo "ticket " . $ticketId . ", modify " . $modify . ", resolve " . $resolve . ", reopen " . $reopen . "<br/>";
 
                 if($modify) {
                     //echo "modify ticket before displaying"."<br/>";
@@ -80,8 +85,9 @@ class Controller {
                 }
 
                 $createComment = isset($_GET['addComment']) ? $_GET['addComment'] : null;
-                $commentInput = (!empty($_POST['commentInput'])) ? $_POST['commentInput'] : null;
-                $this->viewTicket($ticketId, $createComment, $commentInput);
+
+                $commentInput = (!empty($_POST['commentInput']) && (!isset($_POST['cancel_edit']))) ? $_POST['commentInput'] : null;
+                $this->viewTicket($ticketId, $createComment, $commentInput, $editComment, $updateComment);
                 break;
             case "deleteTicket":
                 $ticketId = $_GET['id'];
@@ -194,7 +200,7 @@ class Controller {
         include __DIR__ . '/../templates/create_ticket.php';
     }
 
-    public function viewTicket($ticketId, $createComment, $commentInput) {
+    public function viewTicket($ticketId, $createComment, $commentInput, $editComment, $updateComment) {
         //echo "Controller viewTicket ".$ticketId;
         $ticket = $this->ticketController->getTicketById($ticketId);
         $ticketTypeData = $this->ticketController->getTicketTypeById($ticket['type_id']);
@@ -226,32 +232,57 @@ class Controller {
             }
         }
 
+        //echo "comment input is set: " .  isset($commentInput) . " - " . isset($editComment);
         if(isset($commentInput) && !empty($commentInput)) {
-            //echo "comment input is set to: " .  $commentInput;
-            try {
-               $commentAdded = $this->ticketController->addComment($ticketId, $commentInput);
-               if($commentAdded) {
-                   $ticketTimeUpdated = $this->ticketController->setUpdatedTime($ticketId);
-               }
-               // need to pull down the ticket info again
-               if($ticketUpdatedTime) {
-                   $ticket = $this->ticketController->getTicketById($ticketId);
-               }
+
+            if(!$updateComment) {
+                try {
+                    $commentAdded = $this->ticketController->addComment($ticketId, $commentInput);
+                    if($commentAdded) {
+                        $ticketTimeUpdated = $this->ticketController->setUpdatedTime($ticketId);
+                    }
+                    // need to pull down the ticket info again
+                    if(isset($ticketTimeUpdated) && $ticketTimeUpdated) {
+                        $ticket = $this->ticketController->getTicketById($ticketId);
+                    }
+                }
+                catch(Exception $e) {
+                    echo 'Caught exception: ',  $e->getMessage(), "\n";
+                }
             }
-            catch(Exception $e) {
-                echo 'Caught exception: ',  $e->getMessage(), "\n";
+            else {
+                try {
+                    $updateCommentId = (int)$updateComment;
+                    $commentUpdated = $this->ticketController->updateComment($updateCommentId, $commentInput);
+                    if($commentUpdated) {
+                        $userId = Session::getInstance()->__get('user_id');
+                        $commentTimeUpdated = $this->ticketController->setCommentUpdatedTime($updateCommentId);
+                        $commentUpdatedBy = $this->ticketController->setCommentUpdatedBy($updateCommentId, $userId);
+                        $ticketTimeUpdated = $this->ticketController->setUpdatedTime($ticketId);
+                    }
+                    // need to pull down the ticket info again
+                    if(isset($ticketTimeUpdated) && $ticketTimeUpdated) {
+                        $ticket = $this->ticketController->getTicketById($ticketId);
+                    }
+                }
+                catch(Exception $e) {
+                    echo 'Caught exception: ',  $e->getMessage(), "\n";
+                }
             }
         }
 
-        $timeUpdated = (isset($ticket['updated_time'])) ? date_create($ticket['updated_time']) : "";
+        if(isset($editComment)) {
+            $editCommentId = (int)$editComment;
+        }
 
+        $timeUpdated = (isset($ticket['updated_time'])) ? date_create($ticket['updated_time']) : "";
         $allCommentsData = $this->ticketController->getTicketComments($ticketId);
 
         include __DIR__ . '/../templates/view_ticket.php';
     }
 
     public function modifyTicket($ticketId, $assignToId, $ticketTypeId, $priorityTypeId) {
-        echo "Controller modifyTicket: ".$ticketId;
+        //echo "Controller modifyTicket: ".$ticketId;
         $updated = false;
 
         if(is_int($assignToId) && $assignToId > 0) {
@@ -292,7 +323,7 @@ class Controller {
     }
 
     public function resolveTicket($ticketId, $resolutionId) {
-        echo "Controller reopenTicket ". $ticketId . " - " . $resolutionId;
+        echo "Controller resolveTicket ". $ticketId . " - " . $resolutionId;
 
         if(is_int($resolutionId) && $resolutionId > 0) {
 

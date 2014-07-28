@@ -41,6 +41,10 @@ class TicketController {
         return $this->ticket->addComment($ticketId, $comment);
     }
 
+    public function updateComment($commentId, $comment) {
+        return $this->ticket->updateComment($commentId, $comment);
+    }
+
     public function getTicketComments($id) {
         return $this->ticket->getTicketComments($id);
     }
@@ -119,5 +123,13 @@ class TicketController {
 
     public function setPriorityType($ticketId, $priorityTypeId) {
         return $this->ticket->setPriorityType($ticketId, $priorityTypeId);
+    }
+
+    public function setCommentUpdatedTime($commentId) {
+        return $this->ticket->setCommentUpdatedTime($commentId);
+    }
+
+    public function setCommentUpdatedBy($commentId, $userId) {
+        return $this->ticket->setCommentUpdatedBy($commentId, $userId);
     }
 }
