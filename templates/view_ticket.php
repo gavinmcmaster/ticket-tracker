@@ -54,6 +54,13 @@
         </div>
      </div>
     <div class="row">
+        <?php
+        if($userPermissionTypeId != USER_PERMISSION_VIEW) {
+            include __DIR__ . '/../templates/form_upload.php';
+        }
+        ?>
+    </div>
+    <div class="row">
         <div class="pull-left"> 
             <h4>Comments</h4>
 
