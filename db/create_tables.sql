@@ -114,6 +114,13 @@ ALTER TABLE comments ADD added_by_id INT NOT NULL;
 ALTER TABLE comments ADD CONSTRAINT fk_added_by_id FOREIGN KEY (added_by_id) references users (id) ON DELETE NO ACTION;
 ALTER TABLE comments ADD last_edited_by_id INT;
 ALTER TABLE comments ADD CONSTRAINT fk_last_edited_by_id FOREIGN KEY (last_edited_by_id) references users (id) ON DELETE NO ACTION;
+/** added in error */
+ALTER TABLE comments DROP added_time;
+
+ALTER TABLE attachments ADD added_time DATETIME NOT NULL;
+ALTER TABLE attachments ADD added_by_id INT NOT NULL;
+ALTER TABLE attachments ADD CONSTRAINT fk_added_by_id FOREIGN KEY (added_by_id) references users (id) ON DELETE NO ACTION;
+ALTER TABLE attachments ADD CONSTRAINT fk_ticked_id FOREIGN KEY (ticket_id) REFERENCES users (id) ON DELETE NO ACTION; 
 
 /**** statements that don't work ******/
 DELETE FROM user_types; /* won't work in safe mode without WHERE condition */
@@ -178,6 +185,7 @@ SELECT * FROM ticket_priority_types;
 SELECT * FROM ticket_status_types;
 SELECT * from ticket_resolution_types;
 SELECT * from comments;
+SELECT * FROM attachments;
 
 SELECT * FROM users WHERE id=14; 
 SELECT * FROM tickets WHERE created_time < (NOW() - INTERVAL 20 MINUTE); 
@@ -186,5 +194,6 @@ SELECT * FROM tickets WHERE created_time < (NOW() - INTERVAL 20 MINUTE);
 SHOW CREATE TABLE tickets;
 SHOW CREATE TABLE comments;
 SHOW CREATE TABLE user_permission_types;
+SHOW CREATE TABLE attachments;
 DESCRIBE tickets;
 

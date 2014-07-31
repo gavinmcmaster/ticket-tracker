@@ -6,8 +6,6 @@
  * Time: 12:30
  */
 
-//namespace controllers;
-
 class Controller {
 
     private $dbo;
