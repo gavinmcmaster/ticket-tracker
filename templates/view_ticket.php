@@ -81,7 +81,7 @@
                     include __DIR__ . '/../templates/comment_form.php';
                 }
                 else if($userPermissionTypeId != USER_PERMISSION_VIEW && !$ticketIsResolved) {
-                   echo "<div><a href="."'http://localhost/training/web/ticket_tracker/index.php?action=viewTicket&id=".$ticketId."&addComment=true#newcomment'"."><button class="."'btn comment'".">Add comment</button></a></div>";
+                   echo "<div><a href="."'http://ticket_tracker.local/index.php?action=viewTicket&id=".$ticketId."&addComment=true#newcomment'"."><button class="."'btn comment'".">Add comment</button></a></div>";
                 }
 
                 if($userPermissionTypeId != USER_PERMISSION_VIEW && !$ticketIsResolved) {
