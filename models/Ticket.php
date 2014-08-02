@@ -150,4 +150,117 @@ class Ticket {
 
         return $success;
     }
-} 
+
+    public function getTicketAttachments($ticketId) {
+        $this->dbo->query("SELECT * FROM attachments WHERE ticket_id = :ticket_id");
+        $this->dbo->bind(':ticket_id', $ticketId);
+        $this->dbo->execute();
+        $result = $this->dbo->fetchAll();
+
+        return $result;
+    }
+
+    public function addAttachment($ticketId, $path) {
+        $this->dbo->query("INSERT INTO attachments (ticket_id, filepath, added_time, added_by_id) VALUES (:ticket_id, :filepath, NOW(), :added_by_id)");
+        $this->dbo->bind(':ticket_id', $ticketId);
+        $this->dbo->bind(':filepath', $path);
+        $this->dbo->bind(':added_by_id', Session::getInstance()->__get('user_id'));
+        $success = $this->dbo->execute();
+
+        return $success;
+    }
+
+    public function setUpdatedTime($ticketId) {
+        $this->dbo->query("UPDATE tickets SET updated_time = NOW() WHERE id = :ticket_id");
+        $this->dbo->bind(':ticket_id', $ticketId);
+        $success = $this->dbo->execute();
+
+        return $success;
+    }
+
+    public function setResolved($ticketId, $resolutionId) {
+        $this->dbo->query("UPDATE tickets SET resolution_type_id = :resolution_id WHERE id = :ticket_id");
+        $this->dbo->bind(':ticket_id', $ticketId);
+        $this->dbo->bind(':resolution_id', $resolutionId);
+        $success = $this->dbo->execute();
+
+        return $success;
+    }
+
+    public function setResolvedTime($ticketId) {
+        $this->dbo->query("UPDATE tickets SET resolved_time = NOW() WHERE id = :ticket_id");
+        $this->dbo->bind(':ticket_id', $ticketId);
+        $success = $this->dbo->execute();
+
+        return $success;
+    }
+
+    public function setUnresolved($ticketId) {
+        $this->dbo->query("UPDATE tickets SET resolution_type_id = null WHERE id = :ticket_id");
+        $this->dbo->bind(':ticket_id', $ticketId);
+        $success = $this->dbo->execute();
+
+        return $success;
+    }
+
+    public function unsetResolvedTime($ticketId) {
+        $this->dbo->query("UPDATE tickets SET resolved_time = null WHERE id = :ticket_id");
+        $this->dbo->bind(':ticket_id', $ticketId);
+        $success = $this->dbo->execute();
+
+        return $success;
+    }
+
+    public function setAssignedTo($ticketId, $userId) {
+        $this->dbo->query("UPDATE tickets SET assigned_to_id = :assigned_to_id WHERE id = :ticket_id");
+        $this->dbo->bind(':assigned_to_id', $userId);
+        $this->dbo->bind(':ticket_id', $ticketId);
+        $success = $this->dbo->execute();
+
+        return $success;
+    }
+
+    public function setTicketType($ticketId, $typeId) {
+        $this->dbo->query("UPDATE tickets SET type_id = :type_id WHERE id = :ticket_id");
+        $this->dbo->bind(':type_id', $typeId);
+        $this->dbo->bind(':ticket_id', $ticketId);
+        $success = $this->dbo->execute();
+
+        return $success;
+    }
+
+    public function setPriorityType($ticketId, $priorityTypeId) {
+        $this->dbo->query("UPDATE tickets SET priority_type_id = :priority_type_id WHERE id = :ticket_id");
+        $this->dbo->bind(':ticket_id', $ticketId);
+        $this->dbo->bind(':priority_type_id', $priorityTypeId);
+        $success = $this->dbo->execute();
+
+        return $success;
+    }
+
+    public function updateComment($commentId, $comment) {
+        $this->dbo->query("UPDATE comments SET comment = :comment WHERE id= :comment_id");
+        $this->dbo->bind(':comment', $comment);
+        $this->dbo->bind(':comment_id', $commentId);
+        $success = $this->dbo->execute();
+
+        return $success;
+    }
+
+    public function setCommentUpdatedTime($commentId) {
+        $this->dbo->query("UPDATE comments SET edited_time = NOW() WHERE id = :comment_id");
+        $this->dbo->bind(':comment_id', $commentId);
+        $success = $this->dbo->execute();
+
+        return $success;
+    }
+
+    public function setCommentUpdatedBy($commentId, $userId) {
+        $this->dbo->query("UPDATE comments SET last_edited_by_id = :user_id WHERE id = :comment_id");
+        $this->dbo->bind(':user_id', $userId);
+        $this->dbo->bind(':comment_id', $commentId);
+        $success = $this->dbo->execute();
+
+        return $success;
+    }
+}

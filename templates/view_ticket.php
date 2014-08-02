@@ -28,8 +28,23 @@
             Resolved: <?php if(!empty($dateResolved)) echo date_format($dateResolved, 'd/M/Y H:i') ?> <br/>
         </div>
      </div>
+     <!-- <div class="row">
+       
+    </div> -->
     <div class="row">
-        <div class="pull-left">
+        <h4>Attachments</h4>
+        <?php
+        if(count($allAttachmentsData) > 0) {
+            include __DIR__ . '/../templates/attachments.php';
+        }
+        
+        if($userPermissionTypeId != USER_PERMISSION_VIEW) {
+            include __DIR__ . '/../templates/form_upload.php';
+        }
+        ?>
+    </div>
+    <div class="row">
+        <div class="pull-left"> 
             <h4>Comments</h4>
 
             <?php

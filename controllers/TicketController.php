@@ -45,6 +45,10 @@ class TicketController {
         return $this->ticket->getTicketComments($id);
     }
 
+    public function getTicketAttachments($id) {
+        return $this->ticket->getTicketAttachments($id);
+    }
+
     public function fetchAllTickets() {
         return $this->ticket->fetchAllTickets();
     }
@@ -77,4 +81,52 @@ class TicketController {
     public function getPriorityTypeById($id) {
         return $this->ticket->getPriorityTypeById($id);
     }
-} 
+
+    public function getResolutionTypeById($id) {
+        return $this->ticket->getResolutionTypeById($id);
+    }
+
+    public function setUpdatedTime($ticketid) {
+        return $this->ticket->setUpdatedTime($ticketid);
+    }
+
+    public function setResolved($ticketId, $resolutionId) {
+        return $this->ticket->setResolved($ticketId, $resolutionId);
+    }
+
+    public function setResolvedTime($ticketid) {
+        return $this->ticket->setResolvedTime($ticketid);
+    }
+
+    public function setUnresolved($ticketId) {
+        return $this->ticket->setUnresolved($ticketId);
+    }
+
+    public function unsetResolvedTime($ticketId) {
+        return $this->ticket->unsetResolvedTime($ticketId);
+    }
+
+    public function setAssignedTo($ticketId, $userId) {
+        return $this->ticket->setAssignedTo($ticketId, $userId);
+    }
+
+    public function setTicketType($ticketId, $typeId) {
+        return $this->ticket->setTicketType($ticketId, $typeId);
+    }
+
+    public function setPriorityType($ticketId, $priorityTypeId) {
+        return $this->ticket->setPriorityType($ticketId, $priorityTypeId);
+    }
+
+    public function setCommentUpdatedTime($commentId) {
+        return $this->ticket->setCommentUpdatedTime($commentId);
+    }
+
+    public function setCommentUpdatedBy($commentId, $userId) {
+        return $this->ticket->setCommentUpdatedBy($commentId, $userId);
+    }
+
+    public function addAttachment($ticketId, $path) {
+        return $this->ticket->addAttachment($ticketId, $path);
+    }
+}

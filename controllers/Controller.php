@@ -24,7 +24,7 @@ class Controller {
         //echo "Controller constructor";
         $this->config = $configObject;
         $this->init();
-     }
+    }
 
     private function init() {
         //echo "Controller init";
@@ -58,9 +58,47 @@ class Controller {
                 break;
             case "viewTicket":
                 $ticketId = $_GET['id'];
+
+                //echo "userFile isset: " . isset($_FILES['userFile']) . " - " . count($_FILES);
+
+                if(isset($_FILES['file'])) {
+                    if ($_FILES["file"]["error"] > 0) {
+                        echo "File upload error: " . $_FILES["file"]["error"] . "<br>";
+                    }
+                    else{
+                        $this->handleFileUpload($ticketId, $_FILES);
+                    }
+                }
+
+                $modify = isset($_POST['modify']);
+                $resolve = isset($_POST['resolve']);
+                $reopen = isset($_POST['reopen']);
+                $editComment = isset($_POST['editComment']) ? $_POST['editComment'] : null;
+                $updateComment = isset($_POST['submit_comment_edit']) ? $_POST['submit_comment_edit'] : null;
+
+                //echo "edit comment: " . $editComment . "<br/>";
+                //echo "ticket " . $ticketId . ", modify " . $modify . ", resolve " . $resolve . ", reopen " . $reopen . "<br/>";
+
+                if($modify) {
+                    //echo "modify ticket before displaying"."<br/>";
+                    $assignToId = (!empty($_POST['assignTo']))? (int)$_POST['assignTo'] : null;
+                    $ticketTypeId = (!empty($_POST['ticketType']))? (int)$_POST['ticketType'] : null;
+                    $priorityTypeId = (!empty($_POST['priorityType']))? (int)$_POST['priorityType'] : null;
+                    $this->modifyTicket($ticketId, $assignToId, $ticketTypeId, $priorityTypeId);
+                }
+
+                if($resolve) {
+                    $resolutionId = (!empty($_POST['resolutionType']))? (int)$_POST['resolutionType'] : null;
+                    $this->resolveTicket($ticketId, $resolutionId);
+                }
+
+                if($reopen) {
+                    $this->reopenTicket($ticketId);
+                }
+
                 $createComment = isset($_GET['addComment']) ? $_GET['addComment'] : null;
-                $commentInput = (!empty($_POST['commentInput'])) ? $_POST['commentInput'] : null;
-                $this->viewTicket($ticketId, $createComment, $commentInput);
+                $commentInput = (!empty($_POST['commentInput']) && (!isset($_POST['cancel_edit']))) ? $_POST['commentInput'] : null;
+                $this->viewTicket($ticketId, $createComment, $commentInput, $editComment, $updateComment);
                 break;
             case "deleteTicket":
                 $ticketId = $_GET['id'];
@@ -167,7 +205,7 @@ class Controller {
         include __DIR__ . '/../templates/create_ticket.php';
     }
 
-    public function viewTicket($ticketId, $createComment, $commentInput) {
+    public function viewTicket($ticketId, $createComment, $commentInput, $editComment, $updateComment) {
         //echo "Controller viewTicket ".$ticketId;
         $ticket = $this->ticketController->getTicketById($ticketId);
         $ticketTypeData = $this->ticketController->getTicketTypeById($ticket['type_id']);
@@ -194,6 +232,7 @@ class Controller {
         }
 
         $allCommentsData = $this->ticketController->getTicketComments($ticketId);
+        $allAttachmentsData = $this->ticketController->getTicketAttachments($ticketId);
 
         echo "there are " .count($allCommentsData) . " tickets";
 
@@ -229,5 +268,45 @@ class Controller {
         $url = 'http://ticket_tracker.local/index.php?action=listTickets';
         header("Location: $url");
         die();
+    }
+
+    private function handleFileUpload($ticketId, $files) {
+       //echo "Controller handleFileUpload " . $files['file']['name'] . "<br/>";
+
+        $allowedExts = array("gif", "jpeg", "jpg", "png");
+        $allowedFileTypes = array("image/gif", "image/jpeg", "image/jpg", "image/x-png", "image/png");
+        $temp = explode(".", $files["file"]["name"]);
+        $extension = end($temp);
+        $fileType = $files["file"]["type"];
+        $filePath = ATTACHMENTS_UPLOAD_DIRECTORY . $files["file"]["name"];
+
+        if (in_array($fileType, $allowedFileTypes) && in_array($extension, $allowedExts)) {
+          if ($files["file"]["error"] > 0) {
+            echo "Error Return Code: " . $files["file"]["error"] . "<br>";
+          } else {
+            /*echo "Upload: " . $files["file"]["name"] . "<br>";
+            echo "Type: " . $files["file"]["type"] . "<br>";
+            echo "Size: " . ($files["file"]["size"] / 1024) . " kB<br>";
+            echo "Temp file: " . $files["file"]["tmp_name"] . "<br>";*/
+
+            if (file_exists($filePath)) {
+              echo $filePath . " already exists. ";
+            } else {
+              $fileStored = move_uploaded_file($files["file"]["tmp_name"], $filePath);
+              
+              if($fileStored) {
+                try {
+                    $success = $this->ticketController->addAttachment($ticketId, $filePath);
+                }
+                catch(Exception $e) {
+                     echo 'Caught exception: ',  $e->getMessage(), "\n";
+                }
+            }
+              
+            }
+          }
+        } else {
+          echo "Invalid file";
+        }
     }
 }
