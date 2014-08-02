@@ -180,6 +180,25 @@ class Ticket {
         return $success;
     }
 
+    public function getTicketAttachments($ticketId) {
+        $this->dbo->query("SELECT * FROM attachments WHERE ticket_id = :ticket_id");
+        $this->dbo->bind(':ticket_id', $ticketId);
+        $this->dbo->execute();
+        $result = $this->dbo->fetchAll();
+
+        return $result;
+    }
+
+    public function addAttachment($ticketId, $path) {
+        $this->dbo->query("INSERT INTO attachments (ticket_id, filepath, added_time, added_by_id) VALUES (:ticket_id, :filepath, NOW(), :added_by_id)");
+        $this->dbo->bind(':ticket_id', $ticketId);
+        $this->dbo->bind(':filepath', $path);
+        $this->dbo->bind(':added_by_id', Session::getInstance()->__get('user_id'));
+        $success = $this->dbo->execute();
+
+        return $success;
+    }
+
     public function setUpdatedTime($ticketId) {
         $this->dbo->query("UPDATE tickets SET updated_time = NOW() WHERE id = :ticket_id");
         $this->dbo->bind(':ticket_id', $ticketId);

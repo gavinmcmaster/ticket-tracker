@@ -49,6 +49,10 @@ class TicketController {
         return $this->ticket->getTicketComments($id);
     }
 
+    public function getTicketAttachments($id) {
+        return $this->ticket->getTicketAttachments($id);
+    }
+
     public function fetchAllTickets() {
         return $this->ticket->fetchAllTickets();
     }
@@ -131,5 +135,9 @@ class TicketController {
 
     public function setCommentUpdatedBy($commentId, $userId) {
         return $this->ticket->setCommentUpdatedBy($commentId, $userId);
+    }
+
+    public function addAttachment($ticketId, $path) {
+        return $this->ticket->addAttachment($ticketId, $path);
     }
 }

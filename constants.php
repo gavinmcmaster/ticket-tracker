@@ -34,4 +34,7 @@ define('TICKET_RESOLUTION_TYPE_WONTFIX', 3);
 define('TICKET_RESOLUTION_TYPE_DUPLICATE', 4);
 define('TICKET_RESOLUTION_TYPE_WORKSFORME', 5);
 
+// attachments locations
+define('ATTACHMENTS_UPLOAD_DIRECTORY', 'attachments/');
+
 

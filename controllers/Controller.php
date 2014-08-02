@@ -22,7 +22,7 @@ class Controller {
         //echo "Controller constructor";
         $this->config = $configObject;
         $this->init();
-     }
+    }
 
     private function init() {
         //echo "Controller init";
@@ -61,10 +61,10 @@ class Controller {
 
                 if(isset($_FILES['file'])) {
                     if ($_FILES["file"]["error"] > 0) {
-                        echo "Error: " . $_FILES["file"]["error"] . "<br>";
+                        echo "File upload error: " . $_FILES["file"]["error"] . "<br>";
                     }
                     else{
-                        $this->handleFileUpload($_FILES);
+                        $this->handleFileUpload($ticketId, $_FILES);
                     }
                 }
 
@@ -287,6 +287,7 @@ class Controller {
 
         $timeUpdated = (isset($ticket['updated_time'])) ? date_create($ticket['updated_time']) : "";
         $allCommentsData = $this->ticketController->getTicketComments($ticketId);
+        $allAttachmentsData = $this->ticketController->getTicketAttachments($ticketId);
 
         if(isset($editComment)) {   
             $editComment = (int)$editComment;
@@ -409,39 +410,43 @@ class Controller {
         die();
     }
 
-    private function handleFileUpload($files) {
-        echo "Controller handleFileUpload " . $files['file']['name'];
+    private function handleFileUpload($ticketId, $files) {
+       //echo "Controller handleFileUpload " . $files['file']['name'] . "<br/>";
 
-
-       /* $allowedExts = array("gif", "jpeg", "jpg", "png");
-        $temp = explode(".", $_FILES["file"]["name"]);
+        $allowedExts = array("gif", "jpeg", "jpg", "png");
+        $allowedFileTypes = array("image/gif", "image/jpeg", "image/jpg", "image/x-png", "image/png");
+        $temp = explode(".", $files["file"]["name"]);
         $extension = end($temp);
+        $fileType = $files["file"]["type"];
+        $filePath = ATTACHMENTS_UPLOAD_DIRECTORY . $files["file"]["name"];
 
-        if ((($_FILES["file"]["type"] == "image/gif")
-                || ($_FILES["file"]["type"] == "image/jpeg")
-                || ($_FILES["file"]["type"] == "image/jpg")
-                || ($_FILES["file"]["type"] == "image/pjpeg")
-                || ($_FILES["file"]["type"] == "image/x-png")
-                || ($_FILES["file"]["type"] == "image/png"))
-            && ($_FILES["file"]["size"] < 20000)
-            && in_array($extension, $allowedExts)) {
-            if ($_FILES["file"]["error"] > 0) {
-                echo "Return Code: " . $_FILES["file"]["error"] . "<br>";
+        if (in_array($fileType, $allowedFileTypes) && in_array($extension, $allowedExts)) {
+          if ($files["file"]["error"] > 0) {
+            echo "Error Return Code: " . $files["file"]["error"] . "<br>";
+          } else {
+            /*echo "Upload: " . $files["file"]["name"] . "<br>";
+            echo "Type: " . $files["file"]["type"] . "<br>";
+            echo "Size: " . ($files["file"]["size"] / 1024) . " kB<br>";
+            echo "Temp file: " . $files["file"]["tmp_name"] . "<br>";*/
+
+            if (file_exists($filePath)) {
+              echo $filePath . " already exists. ";
             } else {
-                echo "Upload: " . $_FILES["file"]["name"] . "<br>";
-                echo "Type: " . $_FILES["file"]["type"] . "<br>";
-                echo "Size: " . ($_FILES["file"]["size"] / 1024) . " kB<br>";
-                echo "Temp file: " . $_FILES["file"]["tmp_name"] . "<br>";
-                if (file_exists("upload/" . $_FILES["file"]["name"])) {
-                    echo $_FILES["file"]["name"] . " already exists. ";
-                } else {
-                    move_uploaded_file($_FILES["file"]["tmp_name"],
-                        "upload/" . $_FILES["file"]["name"]);
-                    echo "Stored in: " . "upload/" . $_FILES["file"]["name"];
+              $fileStored = move_uploaded_file($files["file"]["tmp_name"], $filePath);
+              
+              if($fileStored) {
+                try {
+                    $success = $this->ticketController->addAttachment($ticketId, $filePath);
+                }
+                catch(Exception $e) {
+                     echo 'Caught exception: ',  $e->getMessage(), "\n";
                 }
             }
+              
+            }
+          }
         } else {
-            echo "Invalid file";
-        }*/
+          echo "Invalid file";
+        }
     }
 }

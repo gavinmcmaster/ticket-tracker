@@ -53,8 +53,16 @@
             Resolved: <?php if(!empty($timeResolved)) echo date_format($timeResolved, 'd/M/Y H:i') ?> <br/>
         </div>
      </div>
+     <!-- <div class="row">
+       
+    </div> -->
     <div class="row">
+        <h4>Attachments</h4>
         <?php
+        if(count($allAttachmentsData) > 0) {
+            include __DIR__ . '/../templates/attachments.php';
+        }
+        
         if($userPermissionTypeId != USER_PERMISSION_VIEW) {
             include __DIR__ . '/../templates/form_upload.php';
         }
