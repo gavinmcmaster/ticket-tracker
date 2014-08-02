@@ -57,16 +57,12 @@
        
     </div> -->
     <div class="row">
-<<<<<<< HEAD
         <h4>Attachments</h4>
         <?php
         if(count($allAttachmentsData) > 0) {
             include __DIR__ . '/../templates/attachments.php';
         }
         
-=======
-        <?php
->>>>>>> 59480f4835f65098ab72ef7858192266ad8a9bba
         if($userPermissionTypeId != USER_PERMISSION_VIEW) {
             include __DIR__ . '/../templates/form_upload.php';
         }
@@ -85,7 +81,7 @@
                     include __DIR__ . '/../templates/comment_form.php';
                 }
                 else if($userPermissionTypeId != USER_PERMISSION_VIEW && !$ticketIsResolved) {
-                   echo "<div><a href="."'http://ticket_tracker.local/index.php?action=viewTicket&id=".$ticketId."&addComment=true#newcomment'"."><button class="."'btn comment'".">Add comment</button></a></div>";
+                   echo "<div><a href="."'http://localhost/training/web/ticket_tracker/index.php?action=viewTicket&id=".$ticketId."&addComment=true#newcomment'"."><button class="."'btn comment'".">Add comment</button></a></div>";
                 }
 
                 if($userPermissionTypeId != USER_PERMISSION_VIEW && !$ticketIsResolved) {

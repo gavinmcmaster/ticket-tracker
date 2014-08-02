@@ -6,15 +6,13 @@
  * Time: 12:30
  */
 
-//namespace controllers;
-
 class Controller {
 
     private $dbo;
     private $db_host = "localhost";
     private $db_name = "ticket_tracker"; 
     private $db_user = "****";
-    private $db_pass = "*****";
+    private $db_pass = "****";
 
     private $userController = null;
     private $ticketController = null;
@@ -38,7 +36,7 @@ class Controller {
     }
 
     public function handleAction($action) {
-        echo "Controller,handleAction " .$action . "<br/>";
+
         switch($action) {
             case "login":
                 $this->login();
@@ -97,6 +95,7 @@ class Controller {
                 }
 
                 $createComment = isset($_GET['addComment']) ? $_GET['addComment'] : null;
+
                 $commentInput = (!empty($_POST['commentInput']) && (!isset($_POST['cancel_edit']))) ? $_POST['commentInput'] : null;
                 $this->viewTicket($ticketId, $createComment, $commentInput, $editComment, $updateComment);
                 break;
@@ -135,7 +134,7 @@ class Controller {
                 $user = $this->userController->getUserById($userId);
 
                 if($user) {
-                    ///cho "Controller register user " . $user['id']. " - " .$user['name'] . " - " . $user['email'] . " - ". $user['user_type_id'] . " - " . $user['permission_type_id'];
+                    //echo "Controller register user " . $user['id']. " - " .$user['name'] . " - " . $user['email'] . " - ". $user['user_type_id'] . " - " . $user['permission_type_id'];
                     $this->handleUserVerification($user);
                 }
             }
@@ -151,8 +150,7 @@ class Controller {
         Session::getInstance()->__unset('user_name');
         Session::getInstance()->__unset('user_email');
         Session::getInstance()->__unset('user_type_id');
-        Session::getInstance()->__unset('user_permission_type');
-        //Session::getInstance()->__unset('permission_type_id');
+        Session::getInstance()->__unset('permission_type_id');
         Session::getInstance()->destroy();
 
         $url = 'http://ticket_tracker.local/index.php';
@@ -163,7 +161,14 @@ class Controller {
     public function listTickets() {
         //echo "Controller listTickets";
         try {
-            $allTickets = $this->ticketController->fetchAllTickets();
+            $userPermissionTypeId = Session::getInstance()->__get('permission_type_id');
+            if($userPermissionTypeId != USER_PERMISSION_VIEW) {
+                $allTickets = $this->ticketController->fetchAllTickets();
+            }
+            else {
+                $userId = Session::getInstance()->__get('user_id');
+                $allTickets = $this->ticketController->fetchAllTicketsAssignedToUser($userId);
+            }
         }
         catch(Exception $e) {
             echo 'Caught exception: ',  $e->getMessage(), "\n";
@@ -181,7 +186,7 @@ class Controller {
                 echo "createTicket success: " . $success;
                 if($success) {
                     $ticketId = $this->ticketController->getLastInsertId();
-                    $url = 'http://ticket_tracker.local/index.php?action=viewTicket?id='.$ticketId;
+                    $url = 'http://ticket_tracker.local/index.php?action=viewTicket&id='.$ticketId;
                     header("Location: $url");
                     die();
                 }
@@ -199,7 +204,7 @@ class Controller {
             $allUsers = $this->userController->fetchAllUsers();
         }
         catch(Exception $e) {
-            echo 'Caught exception: ', $e->getMessage(), "\n";
+            echo 'Caught exception: ',  $e->getMessage(), "\n";
         }
 
         include __DIR__ . '/../templates/create_ticket.php';
@@ -216,35 +221,173 @@ class Controller {
         $reporterData = $this->userController->getUserById($ticket['reported_by_id']);
         $assignee = $assigneeData['name'];
         $reporter = $reporterData['name'];
-        $dateCreated = date_create($ticket['created_time']);
-        $dateResolved = (isset($ticket['resolved_time'])) ? date_create($ticket['resolved_time']) : "";
-        $userPermissionType = Session::getInstance()->__get('user_permission_type');
-        echo "permission type: " . $userPermissionType ."<br/>"; // admin, crud, update, view
+        $timeCreated = date_create($ticket['created_time']);
+        $timeResolved = (isset($ticket['resolved_time'])) ? date_create($ticket['resolved_time']) : "";
+        $userPermissionTypeId = Session::getInstance()->__get('permission_type_id');
+        //echo "permission type: " . $userPermissionTypeId ."<br/>"; // admin, crud, update, view
 
-        if(isset($commentInput) && !empty($commentInput)) {
-            echo "comment input is set to: " .  $commentInput;
+        $resolutionTypes = $this->ticketController->fetchResolutionTypes();
+        $allUsers = $this->userController->fetchAllUsers();
+        $ticketTypes = $this->ticketController->fetchTicketTypes();
+        $priorityTypes = $this->ticketController->fetchPriorityTypes();
+        $ticketIsResolved = isset($ticket['resolution_type_id']);
+
+        if($ticketIsResolved) {
             try {
-               $success = $this->ticketController->addComment($ticketId, $commentInput);
+                $resolvedAsData =  $this->ticketController->getResolutionTypeById($ticket['resolution_type_id']);
+                $resolvedAs = $resolvedAsData['type'];
             }
             catch(Exception $e) {
                 echo 'Caught exception: ',  $e->getMessage(), "\n";
             }
         }
 
+        //echo "comment input is set: " .  isset($commentInput) . " - " . isset($editComment);
+        if(isset($commentInput) && !empty($commentInput)) {
+
+            if(!$updateComment) {
+                try {
+                    $commentAdded = $this->ticketController->addComment($ticketId, $commentInput);
+                    if($commentAdded) {
+                        $ticketTimeUpdated = $this->ticketController->setUpdatedTime($ticketId);
+                    }
+                    // need to pull down the ticket info again
+                    if(isset($ticketTimeUpdated) && $ticketTimeUpdated) {
+                        $ticket = $this->ticketController->getTicketById($ticketId);
+                    }
+                }
+                catch(Exception $e) {
+                    echo 'Caught exception: ',  $e->getMessage(), "\n";
+                }
+            }
+            else {
+                try {
+                    $updateCommentId = (int)$updateComment;
+                    $commentUpdated = $this->ticketController->updateComment($updateCommentId, $commentInput);
+                    if($commentUpdated) {
+                        $userId = Session::getInstance()->__get('user_id');
+                        $commentTimeUpdated = $this->ticketController->setCommentUpdatedTime($updateCommentId);
+                        $commentUpdatedBy = $this->ticketController->setCommentUpdatedBy($updateCommentId, $userId);
+                        $ticketTimeUpdated = $this->ticketController->setUpdatedTime($ticketId);
+                    }
+                    // need to pull down the ticket info again
+                    if(isset($ticketTimeUpdated) && $ticketTimeUpdated) {
+                        $ticket = $this->ticketController->getTicketById($ticketId);
+                    }
+                }
+                catch(Exception $e) {
+                    echo 'Caught exception: ',  $e->getMessage(), "\n";
+                }
+            }
+        }
+
+        if(isset($editComment)) {
+            $editCommentId = (int)$editComment;
+        }
+
+        $timeUpdated = (isset($ticket['updated_time'])) ? date_create($ticket['updated_time']) : "";
         $allCommentsData = $this->ticketController->getTicketComments($ticketId);
         $allAttachmentsData = $this->ticketController->getTicketAttachments($ticketId);
 
-        echo "there are " .count($allCommentsData) . " tickets";
+        if(isset($editComment)) {   
+            $editComment = (int)$editComment;
+        }
+
+        if(isset($_POST['submit_comment_edit'])) {
+            echo "edit comment with id: " . $_POST['submit_comment_edit'];
+        }
 
         include __DIR__ . '/../templates/view_ticket.php';
     }
 
-    /*public function editTicket() {
-        echo "Controller editTicket";
-    }*/
+    public function modifyTicket($ticketId, $assignToId, $ticketTypeId, $priorityTypeId) {
+        //echo "Controller modifyTicket: ".$ticketId;
+        $updated = false;
 
-    public function deleteTicket($ticketId) {
-        echo "Controller deleteTicket: ".$ticketId;
+        if(is_int($assignToId) && $assignToId > 0) {
+            try {
+                $assignToSet = $this->ticketController->setAssignedTo($ticketId, $assignToId);
+                if($assignToSet) {
+                    $updated = true;
+                }
+            }
+            catch(Exception $e) {
+                echo 'Caught exception: ',  $e->getMessage(), "\n";
+            }
+        }
+
+        if(is_int($ticketTypeId) && $ticketTypeId > 0) {
+            try {
+                $ticketTypeSet = $this->ticketController->setTicketType($ticketId, $ticketTypeId);
+                if($ticketTypeSet) {
+                    $updated = true;
+                }
+            }
+            catch(Exception $e) {
+                echo 'Caught exception: ',  $e->getMessage(), "\n";
+            }
+        }
+
+        if(is_int($priorityTypeId) && $priorityTypeId > 0) {
+            try {
+                $priorityTypeSet = $this->ticketController->setPriorityType($ticketId, $priorityTypeId);
+                if($ticketTypeSet) {
+                    $updated = true;
+                }
+            }
+            catch(Exception $e) {
+                echo 'Caught exception: ',  $e->getMessage(), "\n";
+            }
+        }
+    }
+
+    public function resolveTicket($ticketId, $resolutionId) {
+        echo "Controller resolveTicket ". $ticketId . " - " . $resolutionId;
+
+        if(is_int($resolutionId) && $resolutionId > 0) {
+
+            try {
+                $success = $this->ticketController->setResolved($ticketId, $resolutionId);
+                if($success) {
+
+                    try {
+                        $ticketUpdatedTime = $this->ticketController->setUpdatedTime($ticketId);
+                        $ticketResolvedTime = $this->ticketController->setResolvedTime($ticketId);
+                    }
+                    catch(Exception $e) {
+                        echo 'Caught exception: ',  $e->getMessage(), "\n";
+                    }
+
+                    // if resolution has been set then ignore any other modifications
+                    $url = 'http://ticket_tracker.local/index.php?action=viewTicket&id='.$ticketId;
+                    header("Location: $url");
+                    die();
+                }
+            }
+            catch(Exception $e) {
+                echo 'Caught exception: ',  $e->getMessage(), "\n";
+            }
+        }
+    }
+
+    public function reopenTicket($ticketId) {
+        echo "Controller reopenTicket ". $ticketId;
+
+        try {
+            $success = $this->ticketController->setUnresolved($ticketId);
+
+            if($success) {
+                try {
+                    $unsetResolvedTime = $this->ticketController->unsetResolvedTime($ticketId);
+                }
+                catch(Exception $e) {
+                    echo 'Caught exception: ',  $e->getMessage(), "\n";
+                }
+            }
+        }
+        catch(Exception $e) {
+            echo 'Caught exception: ',  $e->getMessage(), "\n";
+        }
     }
 
     public function getUserController() {
@@ -260,10 +403,7 @@ class Controller {
         Session::getInstance()->__set('user_name', $user['name']);
         Session::getInstance()->__set('user_email', $user['email']);
         Session::getInstance()->__set('user_type_id', $user['user_type_id']);
-        $userPermissionTypeData = $this->userController->getUserPermissionTypeById($user['permission_type_id']);
-        Session::getInstance()->__set('user_permission_type', $userPermissionTypeData['type']);
-        // not sure this is needed, or even useful
-        //Session::getInstance()->__set('permission_type_id', $user['permission_type_id']);
+        Session::getInstance()->__set('permission_type_id', $user['permission_type_id']);
 
         $url = 'http://ticket_tracker.local/index.php?action=listTickets';
         header("Location: $url");

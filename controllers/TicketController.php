@@ -59,7 +59,6 @@ class TicketController {
 
     public function fetchPriorityTypes() {
         return $this->ticket->fetchPriorityTypes();
-
     }
 
     public function getLastInsertId() {
