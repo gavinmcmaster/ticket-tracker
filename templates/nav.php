@@ -5,11 +5,12 @@
     if($session->__isset('user_name')) { ?>
         <a href="http://ticket_tracker.local/index.php?action=logout"><button class="btn logout">Logout</button></a>
         <a href="http://ticket_tracker.local/index.php?action=listTickets"><button class="btn list_tickets">List Tickets</button></a>
-        <!--<a href="http://ticket_tracker.local/index.php?action=viewTicket&id=<?php /*echo $id; */?>"><button class="btn view_ticket">View Ticket</button></a>-->
-        <a href="http://ticket_tracker.local/index.php?action=createTicket"><button class="btn create_ticket">Create Ticket</button></a>
-        <!--<a href="http://ticket_tracker.local/index.php?action=editTicket&id=<?php /*echo $id; */?>"><button class="btn edit_ticket">Edit Ticket</button></a>-->
-        <!--<a href="http://ticket_tracker.local/index.php?action=deleteTicket&id=<?php /*echo $id; */?>"><button class="btn delete_ticket">Delete Ticket</button></a>'-->
-    <?php } else { ?>
+        <?php
+             $userPermissionTypeId = Session::getInstance()->__get('permission_type_id');
+             if($userPermissionTypeId != USER_PERMISSION_VIEW && $userPermissionTypeId != USER_PERMISSION_UPDATE){
+                echo "<a href='http://ticket_tracker.local/index.php?action=createTicket'><button class='btn create_ticket'>Create Ticket</button></a>";
+             }
+       } else { ?>
 
         <h1>Login</h1>
 

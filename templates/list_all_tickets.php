@@ -31,16 +31,22 @@
                         $status =  $this->ticketController->getStatusTypeById($ticket['status_type_id']);
                         $priority = $this->ticketController->getPriorityTypeById($ticket['priority_type_id']);
                         $priorityType = $priority['type'];
+                        $isResolved = isset($ticket['resolution_type_id']);
 
-                        switch($priorityType) {
-                            case "critical":
-                                echo "<tr class='error'>";
-                                break;
-                            case "major":
-                                  echo "<tr class='warning'>";
-                                break;
-                            default:
-                                echo "<tr>";
+                        if($isResolved) {
+                            echo "<tr class='resolved'>";
+                        }
+                        else {
+                            switch($priorityType) {
+                                case "critical":
+                                    echo "<tr class='error'>";
+                                    break;
+                                case "major":
+                                    echo "<tr class='warning'>";
+                                    break;
+                                default:
+                                    echo "<tr>";
+                            }
                         }
 
                         echo "<td><a href=".$ticketUrl." title='View ticket'>".$ticketId."</a></td><td><a href=".$ticketUrl." title='View ticket'>".$ticket['title']."</a></td><td>".$ticketType['type']."</td><td>".$status['type']."</td><td>".$assignee['name']."</td><td>". $formattedDate. "</td></tr>";
