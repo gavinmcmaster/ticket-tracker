@@ -1,27 +1,48 @@
 <div class="view_ticket">
-    <div>
-        <h3><?php echo "#". $ticketId. " ". $ticket['title']?>
+    <div class="row">
+        <div class="pull-left">
+            <div class="row">
+                <h3><?php echo "#". $ticketId. " ". $ticket['title']?>
+                <?php
+                    if($ticketIsResolved) {
+                        echo " <i>(resolved)</i>";
+                    }
+                ?>
+                </h3>
+            </div>
+
+            <div>
+                <?php
+                    if($ticketIsResolved) {
+
+                        $output = "<form role='form' method='post' action='index.php?action=viewTicket&id=".$ticketId ."'>";
+                        $output .= "<button type='submit' class='btn btn-default'>Reopen issue</button>";
+                        $output .=  "<input type='hidden' name='reopen' value='1' />";
+                        $output .= "</form>";
+
+                        echo $output;
+                    }
+                ?>
+            </div>
+    </div>
+    <div class="well pull-right">
         <?php
-            if($ticketIsResolved) {
-                echo " <i>(resolved)</i>";
-            }
+
+            $output = "<form method='post' action='index.php?action=outputTicket&id=".$ticketId."'>";
+            $output .= "Output ticket in specified format:<br/>";
+            $output .= "<input type='radio' name='format' value='plain' checked>Plain text";
+            $output .=  "<input type='radio' name='format' value='csv'>CSV";
+            $output .=  "<input type='radio' name='format' value='json'>JSON";
+            $output .=  "<input type='radio' name='format' value='xml'>XML";
+            $output .=   "<button type='submit' class='btn btn-default'>Output</button>";
+            $output .= "</form>";
+
+            echo $output;
         ?>
-        </h3>
     </div>
 
-    <div>
-        <?php
-            if($ticketIsResolved) {
 
-                $output = "<form role='form' method='post' action='index.php?action=viewTicket&id=".$ticketId ."'>";
-                $output .= "<button type='submit' class='btn btn-default'>Reopen issue</button>";
-                $output .=  "<input type='hidden' name='reopen' value='1' />";
-                $output .= "</form>";
-
-                echo $output;
-            }
-        ?>
-    </div>
+    </div>      
 
     <div class="row">
         <div class="pull-left">

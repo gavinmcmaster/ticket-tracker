@@ -103,6 +103,11 @@ class Controller {
                 $ticketId = $_GET['id'];
                 $this->deleteTicket($ticketId);
                 break;
+            case "outputTicket":
+                $ticketId = $_GET['id'];
+                $format = $_POST['format'];
+                $this->outputTicket($ticketId, $format);
+                break;
             default:
                 echo "error, the action specified is not valid";
         }
@@ -448,5 +453,10 @@ class Controller {
         } else {
           echo "Invalid file";
         }
+    }
+
+    public function outputTicket($ticketId, $format) {
+        //echo "outputTicket " . $ticketId . " in format " . $format;
+        include __DIR__ . '/../service.php';
     }
 }
