@@ -63,7 +63,7 @@
             include __DIR__ . '/../templates/attachments.php';
         }
         
-        if($userPermissionTypeId != USER_PERMISSION_VIEW) {
+        if(!$ticketIsResolved && $userPermissionTypeId != USER_PERMISSION_VIEW) {
             include __DIR__ . '/../templates/form_upload.php';
         }
         ?>
