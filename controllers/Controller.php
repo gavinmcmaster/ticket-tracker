@@ -457,6 +457,34 @@ class Controller {
 
     public function outputTicket($ticketId, $format) {
         //echo "outputTicket " . $ticketId . " in format " . $format;
+        $ticket = $this->ticketController->getTicketById($ticketId);
+        $comments = $this->ticketController->getTicketComments($ticketId);
+        $attachments = $this->ticketController->getTicketAttachments($ticketId);
         include __DIR__ . '/../service.php';
+
+        $url = 'http://localhost/training/web/ticket_tracker/index.php?action=viewTicket&id='.$ticketId;
+        header("Location: $url");
+        die();
+
+        
+        /*echo http_build_query($ticket) . "<br/>";
+
+        $url = 'http://localhost/training/web/ticket_tracker/service.php';
+
+        $curl = curl_init($url);
+
+        curl_setopt($curl, CURLOPT_FAILONERROR, 1);
+        curl_setopt($curl, CURLOPT_FOLLOWLOCATION, 1);
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($curl, CURLOPT_TIMEOUT, 5);
+        curl_setopt($curl, CURLOPT_POST, 1);
+        curl_setopt($curl, CURLOPT_POSTFIELDS, 'ticket=$ticket&format='.$format);
+
+        $r = curl_exec($curl);
+
+        curl_close($curl);
+
+        print_r($r);*/
+
     }
 }

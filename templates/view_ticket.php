@@ -29,11 +29,13 @@
         <?php
 
             $output = "<form method='post' action='index.php?action=outputTicket&id=".$ticketId."'>";
+           //$output = "<form method='post' action='http://localhost/training/web/ticket_tracker/service.php'>";
             $output .= "Output ticket in specified format:<br/>";
             $output .= "<input type='radio' name='format' value='plain' checked>Plain text";
             $output .=  "<input type='radio' name='format' value='csv'>CSV";
             $output .=  "<input type='radio' name='format' value='json'>JSON";
             $output .=  "<input type='radio' name='format' value='xml'>XML";
+            //$output .= "<input type='hidden' name='ticket' value=".$ticketId. ">";
             $output .=   "<button type='submit' class='btn btn-default'>Output</button>";
             $output .= "</form>";
 
