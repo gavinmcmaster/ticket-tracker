@@ -87,7 +87,7 @@
         }
         
         if(!$ticketIsResolved && $userPermissionTypeId != USER_PERMISSION_VIEW) {
-            include __DIR__ . '/../templates/form_upload.php';
+            include __DIR__ . '/../templates/file_upload_form.php';
         }
         ?>
     </div>
