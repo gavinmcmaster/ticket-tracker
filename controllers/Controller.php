@@ -6,36 +6,11 @@
  * Time: 12:30
  */
 
-class Controller {
-
-    private $dbo;
-    private $db_host = "localhost";
-    private $db_name = "ticket_tracker"; 
-    private $db_user = "root";
-    private $db_pass = "root";
-
-    private $userController = null;
-    private $ticketController = null;
-    private $config = null;
-
-    public function __construct($configObject) {
-        //echo "Controller constructor";
-        $this->config = $configObject;
-        $this->init();
-    }
-
-    private function init() {
-        //echo "Controller init";
-        $this->dbo = new Database($this->db_host, $this->db_name, $this->db_user, $this->db_pass);
-
-        if($this->dbo->getIsConnected()) {
-            //echo "db is connected";
-            if(is_null($this->userController)) $this->userController = new UserController($this->dbo, $this->config);
-            if(is_null($this->ticketController)) $this->ticketController = new TicketController($this->dbo);
-        }
-    }
+class Controller extends MainController {
 
     public function handleAction($action) {
+
+        echo "Controller, handleAction " .$action;
 
         switch($action) {
             case "login":
@@ -58,16 +33,6 @@ class Controller {
                 $ticketId = $_GET['id'];
 
                 //echo "userFile isset: " . isset($_FILES['userFile']) . " - " . count($_FILES);
-
-                if(isset($_FILES['file'])) {
-                    if ($_FILES["file"]["error"] > 0) {
-                        echo "File upload error: " . $_FILES["file"]["error"] . "<br>";
-                    }
-                    else{
-                        $this->handleFileUpload($ticketId, $_FILES);
-                    }
-                }
-
                 $modify = isset($_POST['modify']);
                 $resolve = isset($_POST['resolve']);
                 $reopen = isset($_POST['reopen']);
@@ -103,11 +68,19 @@ class Controller {
                 $ticketId = $_GET['id'];
                 $this->deleteTicket($ticketId);
                 break;
-            case "outputTicket":
+            case "uploadFile":
                 $ticketId = $_GET['id'];
-                $format = $_POST['format'];
-                $this->outputTicket($ticketId, $format);
-                break;
+
+                echo "userFile isset: " . isset($_FILES['userFile']) . " - " . count($_FILES);
+                if(isset($_FILES['file'])) {
+                    if ($_FILES["file"]["error"] > 0) {
+                        echo "File upload error: " . $_FILES["file"]["error"] . "<br>";
+                    }
+                    else{
+                        $this->uploadFile($ticketId, $_FILES);
+                    }
+                }
+                break; 
             default:
                 echo "error, the action specified is not valid";
         }
@@ -415,8 +388,8 @@ class Controller {
         die();
     }
 
-    private function handleFileUpload($ticketId, $files) {
-       //echo "Controller handleFileUpload " . $files['file']['name'] . "<br/>";
+    private function uploadFile($ticketId, $files) {
+       echo "Controller uploadFile " . $files['file']['name'] . "<br/>";
 
         $allowedExts = array("gif", "jpeg", "jpg", "png");
         $allowedFileTypes = array("image/gif", "image/jpeg", "image/jpg", "image/x-png", "image/png");
@@ -442,6 +415,9 @@ class Controller {
               if($fileStored) {
                 try {
                     $success = $this->ticketController->addAttachment($ticketId, $filePath);
+                    $url = 'http://localhost/training/web/ticket_tracker/index.php?action=viewTicket&id='.$ticketId;
+                    header("Location: $url");
+                    die();
                 }
                 catch(Exception $e) {
                      echo 'Caught exception: ',  $e->getMessage(), "\n";
@@ -455,7 +431,8 @@ class Controller {
         }
     }
 
-    public function outputTicket($ticketId, $format) {
+    // now handled by ApiController
+    /*public function outputTicket($ticketId, $format) {
         //echo "outputTicket " . $ticketId . " in format " . $format;
         $ticket = $this->ticketController->getTicketById($ticketId);
         $comments = $this->ticketController->getTicketComments($ticketId);
@@ -464,7 +441,7 @@ class Controller {
 
         $url = 'http://localhost/training/web/ticket_tracker/index.php?action=viewTicket&id='.$ticketId;
         header("Location: $url");
-        die();
+        die();*/
 
         
         /*echo http_build_query($ticket) . "<br/>";
@@ -485,6 +462,5 @@ class Controller {
         curl_close($curl);
 
         print_r($r);*/
-
-    }
+   // }
 }

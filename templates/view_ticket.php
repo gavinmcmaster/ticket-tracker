@@ -28,7 +28,7 @@
     <div class="well pull-right">
         <?php
 
-            $output = "<form method='post' action='index.php?action=outputTicket&id=".$ticketId."'>";
+            $output = "<form method='post' action='index.php?action=outputTicket&api=true&id=".$ticketId."'>";
            //$output = "<form method='post' action='http://localhost/training/web/ticket_tracker/service.php'>";
             $output .= "Output ticket in specified format:<br/>";
             $output .= "<input type='radio' name='format' value='plain' checked>Plain text";
