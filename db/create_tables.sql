@@ -119,6 +119,7 @@ ALTER TABLE comments DROP added_time;
 
 ALTER TABLE attachments ADD added_time DATETIME NOT NULL;
 ALTER TABLE attachments ADD added_by_id INT NOT NULL;
+ALTER TABLE attachments ADD file_type VARCHAR(45) NOT NULL;
 ALTER TABLE attachments ADD CONSTRAINT fk_added_by_id FOREIGN KEY (added_by_id) references users (id) ON DELETE NO ACTION;
 ALTER TABLE attachments ADD CONSTRAINT fk_ticked_id FOREIGN KEY (ticket_id) REFERENCES users (id) ON DELETE NO ACTION; 
 
@@ -143,6 +144,9 @@ UPDATE users SET permission_type_id=4 WHERE name='gav';
 UPDATE users SET permission_type_id=2 WHERE name='luke';
 UPDATE users SET permission_type_id=3 WHERE name='carlos';
 UPDATE users SET permission_type_id=4 WHERE name='pavel';
+
+UPDATE attachments SET file_type='image/jpg' WHERE id != 3;
+UPDATE attachments SET file_type='image/png' WHERE id= 3;
 
 /**** all insert *****/
 INSERT INTO users (name, email, password, user_type_id) VALUES ("test", "test@test.com", "password", 1);
@@ -173,7 +177,7 @@ DELETE FROM users WHERE name = '';
 
 /*** empty table ****/
 TRUNCATE users;
-
+	
 /***** random select ********/
 SELECT * FROM users;
 SELECT * FROM user_types;

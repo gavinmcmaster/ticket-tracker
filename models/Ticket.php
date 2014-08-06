@@ -161,9 +161,10 @@ class Ticket {
 
     public function addComment($ticketId, $comment) {
         echo "Ticket,addComment " .$ticketId . " - " .$comment . "<br/>";
-        $this->dbo->query("INSERT INTO comments (ticket_id, comment, created_time) VALUES (:ticket_id, :comment, NOW())");
+        $this->dbo->query("INSERT INTO comments (ticket_id, comment, created_time, added_by_id) VALUES (:ticket_id, :comment, NOW(), :added_by_id)");
         $this->dbo->bind(':ticket_id', $ticketId);
         $this->dbo->bind(':comment', $comment);
+        $this->dbo->bind(':added_by_id', Session::getInstance()->__get('user_id'));
         $success = $this->dbo->execute();
 
         return $success;
@@ -178,10 +179,11 @@ class Ticket {
         return $result;
     }
 
-    public function addAttachment($ticketId, $path) {
-        $this->dbo->query("INSERT INTO attachments (ticket_id, filepath, added_time, added_by_id) VALUES (:ticket_id, :filepath, NOW(), :added_by_id)");
+    public function addAttachment($ticketId, $path, $type) {
+        $this->dbo->query("INSERT INTO attachments (ticket_id, filepath, added_time, added_by_id, file_type) VALUES (:ticket_id, :filepath, NOW(), :added_by_id, :file_type)");
         $this->dbo->bind(':ticket_id', $ticketId);
         $this->dbo->bind(':filepath', $path);
+        $this->dbo->bind(':file_type', $type);
         $this->dbo->bind(':added_by_id', Session::getInstance()->__get('user_id'));
         $success = $this->dbo->execute();
 
@@ -280,5 +282,14 @@ class Ticket {
         $success = $this->dbo->execute();
 
         return $success;
+    }
+
+    public function getAttachmentPathById($id) {
+        $this->dbo->query("SELECT * FROM attachments WHERE id = :id");
+        $this->dbo->bind(':id', $id);
+        $this->dbo->execute();
+        $result = $this->dbo->fetch();
+
+        return $result;
     }
 }

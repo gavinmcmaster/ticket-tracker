@@ -1,4 +1,3 @@
-<?php include('ui/header.htm') ?>
 <?php
 
     require_once 'config.inc.php';
@@ -15,6 +14,10 @@
     
     $api = (isset($_GET['api'])) ? $_GET['api']: false;
 
+    if(!$api) {
+        include('ui/header.htm');
+    }
+
     try {
         $controller = ControllerFactory::getController($api, $config);//new Controller($config);
     } catch(Exception $e) {
@@ -28,6 +31,8 @@
     // user actions
     $action = isset($_GET['action']) ? $_GET['action'] : '';
     if(method_exists($controller,$action)) $controller->handleAction($action);
-?>
 
-<?php include('ui/footer.htm') ?>
+    if(!$api) {
+        include('ui/footer.htm');
+    }
+

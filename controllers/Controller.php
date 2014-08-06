@@ -12,6 +12,8 @@ class Controller extends MainController {
 
         //echo "Controller, handleAction " .$action;
 
+        $sessionActive = Session::getInstance()->__get('user_id') !== null;
+
         switch($action) {
             case "login":
                 $this->login();
@@ -23,13 +25,25 @@ class Controller extends MainController {
                 $this->logout();
                break;
             case "listTickets":
+                if(!$sessionActive) {
+                    echo "You need to be logged in to complete this action";
+                    return;
+                }
                 $this->listTickets();
                 break;
             case "createTicket":
+                if(!$sessionActive) {
+                    echo "You need to be logged in to complete this action";
+                    return;
+                }
                 $create = isset($_POST['create']);
                 $this->createTicket($create);
                 break;
             case "viewTicket":
+                if(!$sessionActive) {
+                    echo "You need to be logged in to complete this action";
+                    return;
+                }
                 $ticketId = $_GET['id'];
                 $modify = isset($_POST['modify']);
                 $resolve = isset($_POST['resolve']);
@@ -63,10 +77,18 @@ class Controller extends MainController {
                 $this->viewTicket($ticketId, $createComment, $commentInput, $editComment, $updateComment);
                 break;
             case "deleteTicket":
+                if(!$sessionActive) {
+                    echo "You need to be logged in to complete this action";
+                    return;
+                }
                 $ticketId = $_GET['id'];
                 $this->deleteTicket($ticketId);
                 break;
             case "uploadFile":
+                if(!$sessionActive) {
+                    echo "You need to be logged in to complete this action";
+                    return;
+                }
                 $ticketId = $_GET['id'];
 
                 echo "userFile isset: " . isset($_FILES['userFile']) . " - " . count($_FILES);
@@ -78,7 +100,16 @@ class Controller extends MainController {
                         $this->uploadFile($ticketId, $_FILES);
                     }
                 }
-                break; 
+                break;
+            case "downloadAttachment":
+                if(!$sessionActive) {
+                    echo "You need to be logged in to complete this action";
+                    return;
+                }
+                $attachmentID = $_GET['id'];
+                $ticketId = $_GET['ticketId'];
+                $this->downloadAttachment($attachmentID, $ticketId);
+                break;
             default:
                 echo "error, the action specified is not valid";
         }
@@ -348,7 +379,7 @@ class Controller extends MainController {
     }
 
     public function reopenTicket($ticketId) {
-        echo "Controller reopenTicket ". $ticketId;
+        //echo "Controller reopenTicket ". $ticketId;
 
         try {
             $success = $this->ticketController->setUnresolved($ticketId);
@@ -397,6 +428,8 @@ class Controller extends MainController {
         $fileType = $files["file"]["type"];
         $filePath = ATTACHMENTS_UPLOAD_DIRECTORY . $files["file"]["name"];
 
+        echo "file type: " . $fileType;
+
         if (in_array($fileType, $allowedFileTypes) && in_array($extension, $allowedExts)) {
           if ($files["file"]["error"] > 0) {
             echo "Error Return Code: " . $files["file"]["error"] . "<br>";
@@ -413,7 +446,7 @@ class Controller extends MainController {
               
               if($fileStored) {
                 try {
-                    $success = $this->ticketController->addAttachment($ticketId, $filePath);
+                    $success = $this->ticketController->addAttachment($ticketId, $filePath, $fileType);
                     $url = 'http://ticket_tracker.local/index.php?action=viewTicket&id='.$ticketId;
                     header("Location: $url");
                     die();
@@ -430,36 +463,85 @@ class Controller extends MainController {
         }
     }
 
-    // now handled by ApiController
-    /*public function outputTicket($ticketId, $format) {
-        //echo "outputTicket " . $ticketId . " in format " . $format;
-        $ticket = $this->ticketController->getTicketById($ticketId);
-        $comments = $this->ticketController->getTicketComments($ticketId);
-        $attachments = $this->ticketController->getTicketAttachments($ticketId);
-        include __DIR__ . '/../service.php';
+    private function downloadAttachment($attachmentId, $ticketId) {
+        //echo "Controller,downloadAttachment " . $attachmentId . " - " . $ticketId . "<br/>";
 
-        $url = 'http://ticket_tracker.local/index.php?action=viewTicket&id='.$ticketId;
+        try {
+            $attachmentData = $this->ticketController->getAttachmentPathById($attachmentId);
+
+            //echo "attachment data: " . $attachmentData;
+
+            if($attachmentData) {
+                $filePath = $attachmentData['filepath'];
+                $fileType = $attachmentData['file_type'];
+
+                $basename = basename($filePath);
+                $filedata = file_get_contents($filePath);
+
+                if ($filedata)
+                {
+                    // THESE HEADERS ARE USED ON ALL BROWSERS
+                    header("Content-Type: application-x/force-download");
+                    header("Content-Disposition: attachment; filename=\"$basename\"");
+                    header("Content-length: ".(string)(strlen($filedata)));
+                    header("Expires: ".gmdate("D, d M Y H:i:s", mktime(date("H")+2, date("i"), date("s"), date("m"), date("d"), date("Y")))." GMT");
+                    header("Last-Modified: ".gmdate("D, d M Y H:i:s")." GMT");
+
+                    // THIS HEADER MUST BE OMITTED FOR IE 6
+                    if (FALSE === strpos($_SERVER["HTTP_USER_AGENT"], 'MSIE 6'))
+                    {
+                        header("Cache-Control: no-cache, must-revalidate");
+                    }
+
+                    // THIS IS THE LAST HEADER
+                    header("Pragma: no-cache");
+
+                    // FLUSH THE HEADERS TO THE BROWSER
+                    flush();
+
+                    // CAPTURE THE FILE IN THE OUTPUT BUFFERS - WILL BE FLUSHED AT SCRIPT END
+                    ob_start();
+                    echo $filedata;
+                }
+
+                //$fullPath = realpath($filePath);
+                //$fullPath = realpath($filePath);
+                //echo "download " . ATTACHMENTS_UPLOAD_DIRECTORY.basename($filePath) . " - " .basename($filePath) . " - " . $fileType;
+               /* header("Content-Type:$fileType");
+
+                header('Content-Description: File Transfer');
+                header("Content-Disposition: attachment; filename=" .basename($filePath));
+                header('Expires: 0');
+                //header('Cache-Control: must-revalidate');
+                //header('Pragma: public');
+                header('Content-Length: ' . filesize(ATTACHMENTS_UPLOAD_DIRECTORY.basename($filePath)));*/
+
+
+                /*header('Content-Description: File Transfer');
+                header('Content-Type: application/octet-stream');
+                header('Content-Disposition: attachment; filename="'.basename($filePath).'"'); //<<< Note the " " surrounding the file name
+                header('Content-Transfer-Encoding: binary');
+                header('Connection: Keep-Alive');
+                header('Expires: 0');
+                header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
+                header('Pragma: public');
+                header('Content-Length: ' . filesize(ATTACHMENTS_UPLOAD_DIRECTORY.basename($filePath)));
+
+                readfile(ATTACHMENTS_UPLOAD_DIRECTORY.basename($filePath));*/
+
+
+
+
+
+            }
+        }
+        catch(Exception $e) {
+            echo 'Caught exception: ',  $e->getMessage(), "\n";
+        }
+
+       /* $url = 'http://ticket_tracker.local/index.php?action=viewTicket&id='.$ticketId;
         header("Location: $url");
         die();*/
 
-        
-        /*echo http_build_query($ticket) . "<br/>";
-
-        $url = 'http://ticket_tracker.local/service.php';
-
-        $curl = curl_init($url);
-
-        curl_setopt($curl, CURLOPT_FAILONERROR, 1);
-        curl_setopt($curl, CURLOPT_FOLLOWLOCATION, 1);
-        curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($curl, CURLOPT_TIMEOUT, 5);
-        curl_setopt($curl, CURLOPT_POST, 1);
-        curl_setopt($curl, CURLOPT_POSTFIELDS, 'ticket=$ticket&format='.$format);
-
-        $r = curl_exec($curl);
-
-        curl_close($curl);
-
-        print_r($r);*/
-   // }
+    }
 }

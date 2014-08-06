@@ -137,7 +137,11 @@ class TicketController {
         return $this->ticket->setCommentUpdatedBy($commentId, $userId);
     }
 
-    public function addAttachment($ticketId, $path) {
-        return $this->ticket->addAttachment($ticketId, $path);
+    public function addAttachment($ticketId, $path, $type) {
+        return $this->ticket->addAttachment($ticketId, $path, $type);
+    }
+
+    public function getAttachmentPathById($id) {
+        return $this->ticket->getAttachmentPathById($id);
     }
 }

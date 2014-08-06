@@ -37,7 +37,7 @@
             $output .=   "<button type='submit' class='btn btn-default'>Output</button>";
             $output .= "</form>";
 
-                echo $output;
+            echo $output;
         ?>
     </div>
 

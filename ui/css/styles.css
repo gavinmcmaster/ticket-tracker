@@ -12,7 +12,7 @@ body {
     margin: 60px 0;
 }
 
-.resolved  {
+.table tbody tr.resolved > td {
     background: #999999;
 }
 
