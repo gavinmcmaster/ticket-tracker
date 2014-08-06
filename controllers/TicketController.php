@@ -41,6 +41,10 @@ class TicketController {
         return $this->ticket->addComment($ticketId, $comment);
     }
 
+    public function updateComment($commentId, $comment) {
+        return $this->ticket->updateComment($commentId, $comment);
+    }
+
     public function getTicketComments($id) {
         return $this->ticket->getTicketComments($id);
     }
@@ -53,6 +57,10 @@ class TicketController {
         return $this->ticket->fetchAllTickets();
     }
 
+    public function fetchAllTicketsAssignedToUser($userId) {
+        return $this->ticket->fetchAllTicketsAssignedToUser($userId);
+    }
+
     public function fetchTicketTypes() {
         return $this->ticket->fetchTicketTypes();
     }
@@ -61,12 +69,12 @@ class TicketController {
         return $this->ticket->fetchPriorityTypes();
     }
 
-    public function getLastInsertId() {
-        return $this->ticket->getLastInsertId();
-    }
-
     public function fetchResolutionTypes() {
         return $this->ticket->fetchResolutionTypes();
+    }
+
+    public function getLastInsertId() {
+        return $this->ticket->getLastInsertId();
     }
 
     public function getTicketById($id) {

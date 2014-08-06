@@ -26,8 +26,8 @@
             <button type="submit" class="btn btn-default">Login</button>
         </form>
 
-        <h1>Register</h1>
 
+        <h1>Register</h1>
         <form role="form" class="register" action="index.php?action=register" method="post">
             <div class="form-group name">
                 <label for="registerInputName">Name</label>

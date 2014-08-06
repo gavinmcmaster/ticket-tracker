@@ -36,3 +36,5 @@ define('TICKET_RESOLUTION_TYPE_WORKSFORME', 5);
 
 // attachments locations
 define('ATTACHMENTS_UPLOAD_DIRECTORY', 'attachments/');
+
+

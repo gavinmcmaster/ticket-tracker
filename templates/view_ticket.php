@@ -1,27 +1,48 @@
 <div class="view_ticket">
-    <div>
-        <h3><?php echo "#". $ticketId. " ". $ticket['title']?>
-        <?php
-            if($ticketIsResolved) {
-                echo " <i>(resolved)</i>";
-            }
-        ?>
-        </h3>
+    <div class="row">
+        <div class="pull-left">
+            <div class="row">
+                <h3><?php echo "#". $ticketId. " ". $ticket['title']?>
+                <?php
+                    if($ticketIsResolved) {
+                        echo " <i>(resolved)</i>";
+                    }
+                ?>
+                </h3>
+            </div>
+
+            <div>
+                <?php
+                    if($ticketIsResolved) {
+
+                        $output = "<form role='form' method='post' action='index.php?action=viewTicket&id=".$ticketId ."'>";
+                        $output .= "<button type='submit' class='btn btn-default'>Reopen issue</button>";
+                        $output .=  "<input type='hidden' name='reopen' value='1' />";
+                        $output .= "</form>";
+
+                        echo $output;
+                    }
+                ?>
+            </div>
     </div>
-
-    <div>
+    <div class="well pull-right">
         <?php
-            if($ticketIsResolved) {
 
-                $output = "<form role='form' method='post' action='index.php?action=viewTicket&id=".$ticketId ."'>";
-                $output .= "<button type='submit' class='btn btn-default'>Reopen issue</button>";
-                $output .=  "<input type='hidden' name='reopen' value='1' />";
-                $output .= "</form>";
+            $output = "<form method='post' action='index.php?action=outputTicket&api=true&id=".$ticketId."'>";
+            $output .= "Output ticket in specified format:<br/>";
+            $output .= "<input type='radio' name='format' value='plain' checked>Plain text";
+            $output .=  "<input type='radio' name='format' value='csv'>CSV";
+            $output .=  "<input type='radio' name='format' value='json'>JSON";
+            $output .=  "<input type='radio' name='format' value='xml'>XML";
+            $output .=   "<button type='submit' class='btn btn-default'>Output</button>";
+            $output .= "</form>";
 
                 echo $output;
-            }
         ?>
     </div>
+
+
+    </div>      
 
     <div class="row">
         <div class="pull-left">
@@ -63,8 +84,8 @@
             include __DIR__ . '/../templates/attachments.php';
         }
         
-        if($userPermissionTypeId != USER_PERMISSION_VIEW) {
-            include __DIR__ . '/../templates/form_upload.php';
+        if(!$ticketIsResolved && $userPermissionTypeId != USER_PERMISSION_VIEW) {
+            include __DIR__ . '/../templates/file_upload_form.php';
         }
         ?>
     </div>

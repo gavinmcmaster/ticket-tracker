@@ -24,10 +24,12 @@
                 }
 
                 echo "</div>";
-                echo "<form role='form' class='create_ticket' id='editComment' action='index.php?action=viewTicket&id=". $ticketId ."#comment:". $commentNum . "' method='post'>";
-                echo  "<input type='hidden' name='editComment' value=" .$commentNum. " />";
-                echo "<div class='pull-right'><button type='submit' class='btn btn-default'>Edit</button></div>";
-                echo "</form>";
+                if(!$ticketIsResolved) {
+                    echo "<form role='form' class='create_ticket' id='editComment' action='index.php?action=viewTicket&id=". $ticketId ."#comment:". $commentNum . "' method='post'>";
+                    echo  "<input type='hidden' name='editComment' value=" .$commentNum. " />";
+                    echo "<div class='pull-right'><button type='submit' class='btn btn-default'>Edit</button></div>";
+                    echo "</form>";
+                }
                 echo "</div>";
             }
             $commentNum++;

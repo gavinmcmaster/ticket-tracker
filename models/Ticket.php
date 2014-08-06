@@ -160,6 +160,7 @@ class Ticket {
     }
 
     public function addComment($ticketId, $comment) {
+        echo "Ticket,addComment " .$ticketId . " - " .$comment . "<br/>";
         $this->dbo->query("INSERT INTO comments (ticket_id, comment, created_time) VALUES (:ticket_id, :comment, NOW())");
         $this->dbo->bind(':ticket_id', $ticketId);
         $this->dbo->bind(':comment', $comment);

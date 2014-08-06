@@ -6,36 +6,11 @@
  * Time: 12:30
  */
 
-class Controller {
-
-    private $dbo;
-    private $db_host = "localhost";
-    private $db_name = "ticket_tracker"; 
-    private $db_user = "root";
-    private $db_pass = "gav1n";
-
-    private $userController = null;
-    private $ticketController = null;
-    private $config = null;
-
-    public function __construct($configObject) {
-        //echo "Controller constructor";
-        $this->config = $configObject;
-        $this->init();
-    }
-
-    private function init() {
-        //echo "Controller init";
-        $this->dbo = new Database($this->db_host, $this->db_name, $this->db_user, $this->db_pass);
-
-        if($this->dbo->getIsConnected()) {
-            //echo "db is connected";
-            if(is_null($this->userController)) $this->userController = new UserController($this->dbo, $this->config);
-            if(is_null($this->ticketController)) $this->ticketController = new TicketController($this->dbo);
-        }
-    }
+class Controller extends MainController {
 
     public function handleAction($action) {
+
+        //echo "Controller, handleAction " .$action;
 
         switch($action) {
             case "login":
@@ -56,18 +31,6 @@ class Controller {
                 break;
             case "viewTicket":
                 $ticketId = $_GET['id'];
-
-                //echo "userFile isset: " . isset($_FILES['userFile']) . " - " . count($_FILES);
-
-                if(isset($_FILES['file'])) {
-                    if ($_FILES["file"]["error"] > 0) {
-                        echo "File upload error: " . $_FILES["file"]["error"] . "<br>";
-                    }
-                    else{
-                        $this->handleFileUpload($ticketId, $_FILES);
-                    }
-                }
-
                 $modify = isset($_POST['modify']);
                 $resolve = isset($_POST['resolve']);
                 $reopen = isset($_POST['reopen']);
@@ -103,6 +66,19 @@ class Controller {
                 $ticketId = $_GET['id'];
                 $this->deleteTicket($ticketId);
                 break;
+            case "uploadFile":
+                $ticketId = $_GET['id'];
+
+                echo "userFile isset: " . isset($_FILES['userFile']) . " - " . count($_FILES);
+                if(isset($_FILES['file'])) {
+                    if ($_FILES["file"]["error"] > 0) {
+                        echo "File upload error: " . $_FILES["file"]["error"] . "<br>";
+                    }
+                    else{
+                        $this->uploadFile($ticketId, $_FILES);
+                    }
+                }
+                break; 
             default:
                 echo "error, the action specified is not valid";
         }
@@ -286,6 +262,7 @@ class Controller {
         }
 
         $timeUpdated = (isset($ticket['updated_time'])) ? date_create($ticket['updated_time']) : "";
+
         $allCommentsData = $this->ticketController->getTicketComments($ticketId);
         $allAttachmentsData = $this->ticketController->getTicketAttachments($ticketId);
 
@@ -410,13 +387,13 @@ class Controller {
         die();
     }
 
-    private function handleFileUpload($ticketId, $files) {
-       //echo "Controller handleFileUpload " . $files['file']['name'] . "<br/>";
+    private function uploadFile($ticketId, $files) {
+       echo "Controller uploadFile " . $files['file']['name'] . "<br/>";
 
         $allowedExts = array("gif", "jpeg", "jpg", "png");
         $allowedFileTypes = array("image/gif", "image/jpeg", "image/jpg", "image/x-png", "image/png");
         $temp = explode(".", $files["file"]["name"]);
-        $extension = strtolower(end($temp));
+        $extension = end($temp);
         $fileType = $files["file"]["type"];
         $filePath = ATTACHMENTS_UPLOAD_DIRECTORY . $files["file"]["name"];
 
@@ -433,10 +410,13 @@ class Controller {
               echo $filePath . " already exists. ";
             } else {
               $fileStored = move_uploaded_file($files["file"]["tmp_name"], $filePath);
-
+              
               if($fileStored) {
                 try {
                     $success = $this->ticketController->addAttachment($ticketId, $filePath);
+                    $url = 'http://ticket_tracker.local/index.php?action=viewTicket&id='.$ticketId;
+                    header("Location: $url");
+                    die();
                 }
                 catch(Exception $e) {
                      echo 'Caught exception: ',  $e->getMessage(), "\n";
@@ -449,4 +429,37 @@ class Controller {
           echo "Invalid file";
         }
     }
+
+    // now handled by ApiController
+    /*public function outputTicket($ticketId, $format) {
+        //echo "outputTicket " . $ticketId . " in format " . $format;
+        $ticket = $this->ticketController->getTicketById($ticketId);
+        $comments = $this->ticketController->getTicketComments($ticketId);
+        $attachments = $this->ticketController->getTicketAttachments($ticketId);
+        include __DIR__ . '/../service.php';
+
+        $url = 'http://ticket_tracker.local/index.php?action=viewTicket&id='.$ticketId;
+        header("Location: $url");
+        die();*/
+
+        
+        /*echo http_build_query($ticket) . "<br/>";
+
+        $url = 'http://ticket_tracker.local/service.php';
+
+        $curl = curl_init($url);
+
+        curl_setopt($curl, CURLOPT_FAILONERROR, 1);
+        curl_setopt($curl, CURLOPT_FOLLOWLOCATION, 1);
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($curl, CURLOPT_TIMEOUT, 5);
+        curl_setopt($curl, CURLOPT_POST, 1);
+        curl_setopt($curl, CURLOPT_POSTFIELDS, 'ticket=$ticket&format='.$format);
+
+        $r = curl_exec($curl);
+
+        curl_close($curl);
+
+        print_r($r);*/
+   // }
 }
