@@ -44,6 +44,14 @@ class Ticket {
         return $result;
     }
 
+    public function fetchResolutionTypes() {
+        $this->dbo->query("SELECT * FROM ticket_resolution_types");
+        $this->dbo->execute();
+        $result = $this->dbo->fetchAll();
+
+        return $result;
+    }
+
     public function insert($type_id, $title, $description, $reportedById, $ticketPriorityTypeId, $assignedToId) {
         //echo "Ticket insert ".$type_id." - ".$title." - ".$description." - ".$reportedById." - " .$ticketPriorityTypeId." - ".$assignedToId;
         //  echo "<br/>";
@@ -117,6 +125,15 @@ class Ticket {
 
     public function getPriorityTypeById($id) {
         $this->dbo->query("SELECT * FROM ticket_priority_types WHERE id = :id");
+        $this->dbo->bind(':id', $id);
+        $this->dbo->execute();
+        $result = $this->dbo->fetch();
+
+        return $result;
+    }
+
+    public function getResolutionTypeById($id) {
+        $this->dbo->query("SELECT * FROM ticket_resolution_types WHERE id = :id");
         $this->dbo->bind(':id', $id);
         $this->dbo->execute();
         $result = $this->dbo->fetch();

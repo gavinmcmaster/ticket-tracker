@@ -11,8 +11,8 @@ class Controller {
     private $dbo;
     private $db_host = "localhost";
     private $db_name = "ticket_tracker"; 
-    private $db_user = "****";
-    private $db_pass = "****";
+    private $db_user = "root";
+    private $db_pass = "gav1n";
 
     private $userController = null;
     private $ticketController = null;
@@ -416,7 +416,7 @@ class Controller {
         $allowedExts = array("gif", "jpeg", "jpg", "png");
         $allowedFileTypes = array("image/gif", "image/jpeg", "image/jpg", "image/x-png", "image/png");
         $temp = explode(".", $files["file"]["name"]);
-        $extension = end($temp);
+        $extension = strtolower(end($temp));
         $fileType = $files["file"]["type"];
         $filePath = ATTACHMENTS_UPLOAD_DIRECTORY . $files["file"]["name"];
 
@@ -433,7 +433,7 @@ class Controller {
               echo $filePath . " already exists. ";
             } else {
               $fileStored = move_uploaded_file($files["file"]["tmp_name"], $filePath);
-              
+
               if($fileStored) {
                 try {
                     $success = $this->ticketController->addAttachment($ticketId, $filePath);

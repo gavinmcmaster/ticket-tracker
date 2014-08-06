@@ -65,6 +65,10 @@ class TicketController {
         return $this->ticket->getLastInsertId();
     }
 
+    public function fetchResolutionTypes() {
+        return $this->ticket->fetchResolutionTypes();
+    }
+
     public function getTicketById($id) {
         return $this->ticket->getTicketById($id);
     }
