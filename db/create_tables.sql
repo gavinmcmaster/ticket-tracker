@@ -201,3 +201,6 @@ SHOW CREATE TABLE user_permission_types;
 SHOW CREATE TABLE attachments;
 DESCRIBE tickets;
 
+/** remove data **/
+TRUNCATE TABLE attachments;
+

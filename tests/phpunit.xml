@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<phpunit>
+    <php>
+        <var name="DB_DSN" value="mysql:dbname=ticket_tracker_test;host=localhost" />
+        <var name="DB_USER" value="root" />
+        <var name="DB_PASSWD" value="gav1n" />
+        <var name="DB_DBNAME" value="ticket_tracker_test" />
+    </php>
+</phpunit>

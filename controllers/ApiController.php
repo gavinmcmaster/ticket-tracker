@@ -167,29 +167,24 @@ class ApiController extends MainController {
 
         foreach($ticket as $k=>$v) {
            //echo $k . ": " . $v . "\n";
-
-          array_push($allTicket, $k, $v);
+          array_push($allTicket, $v);
         }
 
+        array_push($allTicket, "comments");
         foreach($comments as $comment) {
-            //echo "comments\n";
-            array_push($allTicket, "comments");
+            array_push($allTicket, "comment");
             foreach($comment as $k => $v) {
-                //echo "comment\n";
-                array_push($allTicket, "comment");
                 //echo $k . ": " . $v . "\n";
-                array_push($allTicket, $k, $v);
+                array_push($allTicket, $v);
             }
         }
 
+        array_push($allTicket, "attachments");
         foreach($attachments as $attachment) {
-            //echo "attachments\n";
-            array_push($allTicket, "attachments");
+            array_push($allTicket, "attachment");
             foreach($attachment as $k => $v) {
-                //echo "attachment\n";
-                array_push($allTicket, "attachment");
                 //echo $k . ": " . $v . "\n";
-                array_push($allTicket, $k, $v);
+                array_push($allTicket, $v);
             }
         }
 

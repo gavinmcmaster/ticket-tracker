@@ -16,7 +16,7 @@
         }
 
 		echo "<a href='" . $filePath . "'>".$fileName . "</a><i> added by " . $addedByUserData['name'] . " on " . date_format($addedTime,'d/M/Y H:i' ) . "</i>";
-        echo "   <a href='/index.php?action=downloadAttachment&id=" .$id. "&ticketId=" .$ticketId."'>[download]</a>";
+        echo "   <a href='/index.php?action=downloadAttachment&download=true&id=" .$id. "&ticketId=" .$ticketId."'>[download]</a>";
 		echo "<br/>";
 	}
 ?>

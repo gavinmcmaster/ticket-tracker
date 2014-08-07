@@ -1,0 +1,675 @@
+<?xml version="1.0"?>
+<mysqldump xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<database name="ticket_tracker">
+    <table_data name="user_permission_types">
+        <row>
+            <field name="id">4</field>
+            <field name="type">admin</field>
+        </row>
+        <row>
+            <field name="id">3</field>
+            <field name="type">crud</field>
+        </row>
+        <row>
+            <field name="id">2</field>
+            <field name="type">update</field>
+        </row>
+        <row>
+            <field name="id">1</field>
+            <field name="type">view</field>
+        </row>
+    </table_data>
+    <table_data name="user_types">
+        <row>
+            <field name="id">1</field>
+            <field name="type">graphics</field>
+        </row>
+        <row>
+            <field name="id">2</field>
+            <field name="type">programmer</field>
+        </row>
+        <row>
+            <field name="id">3</field>
+            <field name="type">project manager</field>
+        </row>
+        <row>
+            <field name="id">5</field>
+            <field name="type">qa</field>
+        </row>
+        <row>
+            <field name="id">4</field>
+            <field name="type">support</field>
+        </row>
+    </table_data>
+    <table_data name="users">
+        <row>
+            <field name="id">9</field>
+            <field name="name">gav</field>
+            <field name="email">gavmcmaster@gmail.com</field>
+            <field name="password">bdee4dfede14dd1e127ebc23688131ff</field>
+            <field name="user_type_id">2</field>
+            <field name="permission_type_id">4</field>
+        </row>
+        <row>
+            <field name="id">10</field>
+            <field name="name">pavel</field>
+            <field name="email">pavel@test.com</field>
+            <field name="password">fef191eecf129deb7b5eccb0024d1557</field>
+            <field name="user_type_id">2</field>
+            <field name="permission_type_id">4</field>
+        </row>
+        <row>
+            <field name="id">11</field>
+            <field name="name">tony</field>
+            <field name="email">tony@test.com</field>
+            <field name="password">bdee4dfede14dd1e127ebc23688131ff</field>
+            <field name="user_type_id">3</field>
+            <field name="permission_type_id">1</field>
+        </row>
+        <row>
+            <field name="id">12</field>
+            <field name="name">ian</field>
+            <field name="email">ian@test.com</field>
+            <field name="password">bdee4dfede14dd1e127ebc23688131ff</field>
+            <field name="user_type_id">1</field>
+            <field name="permission_type_id">2</field>
+        </row>
+        <row>
+            <field name="id">13</field>
+            <field name="name">carlos</field>
+            <field name="email">carlos@test.com</field>
+            <field name="password">bdee4dfede14dd1e127ebc23688131ff</field>
+            <field name="user_type_id">2</field>
+            <field name="permission_type_id">3</field>
+        </row>
+        <row>
+            <field name="id">16</field>
+            <field name="name">luke</field>
+            <field name="email">luke@test.com</field>
+            <field name="password">bdee4dfede14dd1e127ebc23688131ff</field>
+            <field name="user_type_id">5</field>
+            <field name="permission_type_id">3</field>
+        </row>
+        <row>
+            <field name="id">17</field>
+            <field name="name">jo</field>
+            <field name="email">jo@test.com</field>
+            <field name="password">bdee4dfede14dd1e127ebc23688131ff</field>
+            <field name="user_type_id">4</field>
+            <field name="permission_type_id">4</field>
+        </row>
+    </table_data>
+    <table_data name="ticket_priority_types">
+        <row>
+            <field name="id">1</field>
+            <field name="type">minor</field>
+        </row>
+        <row>
+            <field name="id">2</field>
+            <field name="type">major</field>
+        </row>
+        <row>
+            <field name="id">3</field>
+            <field name="type">critical</field>
+        </row>
+    </table_data>
+    <table_data name="ticket_resolution_types">
+        <row>
+            <field name="id">1</field>
+            <field name="type">fixed</field>
+        </row>
+        <row>
+            <field name="id">2</field>
+            <field name="type">invalid</field>
+        </row>
+        <row>
+            <field name="id">3</field>
+            <field name="type">wontfix</field>
+        </row>
+        <row>
+            <field name="id">4</field>
+            <field name="type">duplicate</field>
+        </row>
+        <row>
+            <field name="id">5</field>
+            <field name="type">worksforme</field>
+        </row>
+    </table_data>
+    <table_data name="ticket_status_types">
+        <row>
+            <field name="id">1</field>
+            <field name="type">new</field>
+        </row>
+        <row>
+            <field name="id">2</field>
+            <field name="type">assigned</field>
+        </row>
+        <row>
+            <field name="id">3</field>
+            <field name="type">closed</field>
+        </row>
+    </table_data>
+    <table_data name="ticket_types">
+        <row>
+            <field name="id">1</field>
+            <field name="type">task</field>
+        </row>
+        <row>
+            <field name="id">2</field>
+            <field name="type">enhancement</field>
+        </row>
+        <row>
+            <field name="id">3</field>
+            <field name="type">defect</field>
+        </row>
+    </table_data>
+    <table_data name="tickets">
+        <row>
+            <field name="id">5</field>
+            <field name="type_id">3</field>
+            <field name="title">1st ticket</field>
+            <field name="description">1st ticket description</field>
+            <field name="assigned_to_id">11</field>
+            <field name="reported_by_id">9</field>
+            <field name="status_type_id">2</field>
+            <field name="resolution_type_id" xsi:nil="true" />
+            <field name="priority_type_id">3</field>
+            <field name="created_time">2014-07-03 13:19:19</field>
+            <field name="resolved_time" xsi:nil="true" />
+            <field name="updated_time">2014-08-06 10:42:43</field>
+        </row>
+        <row>
+            <field name="id">7</field>
+            <field name="type_id">2</field>
+            <field name="title">2nd ticket</field>
+            <field name="description">2nd ticket description</field>
+            <field name="assigned_to_id">12</field>
+            <field name="reported_by_id">9</field>
+            <field name="status_type_id">2</field>
+            <field name="resolution_type_id" xsi:nil="true" />
+            <field name="priority_type_id">2</field>
+            <field name="created_time">2014-07-03 13:19:19</field>
+            <field name="resolved_time" xsi:nil="true" />
+            <field name="updated_time" xsi:nil="true" />
+        </row>
+        <row>
+            <field name="id">8</field>
+            <field name="type_id">1</field>
+            <field name="title">ticket 3 </field>
+            <field name="description">test description</field>
+            <field name="assigned_to_id">12</field>
+            <field name="reported_by_id">9</field>
+            <field name="status_type_id">2</field>
+            <field name="resolution_type_id" xsi:nil="true" />
+            <field name="priority_type_id">1</field>
+            <field name="created_time">2014-07-03 13:19:19</field>
+            <field name="resolved_time" xsi:nil="true" />
+            <field name="updated_time">2014-07-31 15:06:56</field>
+        </row>
+        <row>
+            <field name="id">12</field>
+            <field name="type_id">1</field>
+            <field name="title">test</field>
+            <field name="description">testy</field>
+            <field name="assigned_to_id" xsi:nil="true" />
+            <field name="reported_by_id">9</field>
+            <field name="status_type_id">1</field>
+            <field name="resolution_type_id" xsi:nil="true" />
+            <field name="priority_type_id">1</field>
+            <field name="created_time">2014-07-03 13:19:19</field>
+            <field name="resolved_time" xsi:nil="true" />
+            <field name="updated_time" xsi:nil="true" />
+        </row>
+        <row>
+            <field name="id">13</field>
+            <field name="type_id">2</field>
+            <field name="title">gkbgk</field>
+            <field name="description">jkbnlkjbnlkjn</field>
+            <field name="assigned_to_id">13</field>
+            <field name="reported_by_id">9</field>
+            <field name="status_type_id">1</field>
+            <field name="resolution_type_id">3</field>
+            <field name="priority_type_id">2</field>
+            <field name="created_time">2014-07-03 13:19:19</field>
+            <field name="resolved_time">2014-07-25 17:09:54</field>
+            <field name="updated_time">2014-07-25 17:09:54</field>
+        </row>
+        <row>
+            <field name="id">14</field>
+            <field name="type_id">1</field>
+            <field name="title">test assign</field>
+            <field name="description">assign to somebody</field>
+            <field name="assigned_to_id">11</field>
+            <field name="reported_by_id">9</field>
+            <field name="status_type_id">2</field>
+            <field name="resolution_type_id" xsi:nil="true" />
+            <field name="priority_type_id">1</field>
+            <field name="created_time">2014-07-03 13:19:49</field>
+            <field name="resolved_time" xsi:nil="true" />
+            <field name="updated_time" xsi:nil="true" />
+        </row>
+        <row>
+            <field name="id">15</field>
+            <field name="type_id">1</field>
+            <field name="title">test created time</field>
+            <field name="description">set created time to now</field>
+            <field name="assigned_to_id" xsi:nil="true" />
+            <field name="reported_by_id">9</field>
+            <field name="status_type_id">1</field>
+            <field name="resolution_type_id" xsi:nil="true" />
+            <field name="priority_type_id">1</field>
+            <field name="created_time">2014-07-03 13:03:22</field>
+            <field name="resolved_time" xsi:nil="true" />
+            <field name="updated_time" xsi:nil="true" />
+        </row>
+        <row>
+            <field name="id">16</field>
+            <field name="type_id">1</field>
+            <field name="title">critical ticket</field>
+            <field name="description">should show up red in list</field>
+            <field name="assigned_to_id" xsi:nil="true" />
+            <field name="reported_by_id">9</field>
+            <field name="status_type_id">1</field>
+            <field name="resolution_type_id" xsi:nil="true" />
+            <field name="priority_type_id">3</field>
+            <field name="created_time">2014-07-03 15:40:38</field>
+            <field name="resolved_time" xsi:nil="true" />
+            <field name="updated_time" xsi:nil="true" />
+        </row>
+        <row>
+            <field name="id">17</field>
+            <field name="type_id">1</field>
+            <field name="title">assigned critical ticket</field>
+            <field name="description">works now?</field>
+            <field name="assigned_to_id">11</field>
+            <field name="reported_by_id">9</field>
+            <field name="status_type_id">2</field>
+            <field name="resolution_type_id" xsi:nil="true" />
+            <field name="priority_type_id">3</field>
+            <field name="created_time">2014-07-03 16:30:15</field>
+            <field name="resolved_time" xsi:nil="true" />
+            <field name="updated_time" xsi:nil="true" />
+        </row>
+        <row>
+            <field name="id">18</field>
+            <field name="type_id">3</field>
+            <field name="title">ticket added by pavel</field>
+            <field name="description">this doesnt work</field>
+            <field name="assigned_to_id">9</field>
+            <field name="reported_by_id">9</field>
+            <field name="status_type_id">2</field>
+            <field name="resolution_type_id" xsi:nil="true" />
+            <field name="priority_type_id">2</field>
+            <field name="created_time">2014-07-10 17:08:35</field>
+            <field name="resolved_time" xsi:nil="true" />
+            <field name="updated_time" xsi:nil="true" />
+        </row>
+        <row>
+            <field name="id">19</field>
+            <field name="type_id">3</field>
+            <field name="title">ticket added by jo</field>
+            <field name="description">support ticket</field>
+            <field name="assigned_to_id">17</field>
+            <field name="reported_by_id">17</field>
+            <field name="status_type_id">2</field>
+            <field name="resolution_type_id" xsi:nil="true" />
+            <field name="priority_type_id">3</field>
+            <field name="created_time">2014-07-24 11:23:54</field>
+            <field name="resolved_time" xsi:nil="true" />
+            <field name="updated_time" xsi:nil="true" />
+        </row>
+        <row>
+            <field name="id">20</field>
+            <field name="type_id">3</field>
+            <field name="title">test</field>
+            <field name="description">to see what happens when the page goes when i create a new ticket</field>
+            <field name="assigned_to_id">10</field>
+            <field name="reported_by_id">17</field>
+            <field name="status_type_id">1</field>
+            <field name="resolution_type_id" xsi:nil="true" />
+            <field name="priority_type_id">3</field>
+            <field name="created_time">2014-07-24 11:30:07</field>
+            <field name="resolved_time" xsi:nil="true" />
+            <field name="updated_time">2014-07-25 17:34:59</field>
+        </row>
+        <row>
+            <field name="id">21</field>
+            <field name="type_id">1</field>
+            <field name="title">create ticket fix</field>
+            <field name="description">should now take me to view ticket page</field>
+            <field name="assigned_to_id" xsi:nil="true" />
+            <field name="reported_by_id">17</field>
+            <field name="status_type_id">1</field>
+            <field name="resolution_type_id" xsi:nil="true" />
+            <field name="priority_type_id">1</field>
+            <field name="created_time">2014-07-24 11:32:44</field>
+            <field name="resolved_time" xsi:nil="true" />
+            <field name="updated_time">2014-07-31 15:08:06</field>
+        </row>
+        <row>
+            <field name="id">22</field>
+            <field name="type_id">1</field>
+            <field name="title">test modify ticket</field>
+            <field name="description">test modify ticket</field>
+            <field name="assigned_to_id">11</field>
+            <field name="reported_by_id">16</field>
+            <field name="status_type_id">2</field>
+            <field name="resolution_type_id" xsi:nil="true" />
+            <field name="priority_type_id">1</field>
+            <field name="created_time">2014-07-24 11:48:53</field>
+            <field name="resolved_time" xsi:nil="true" />
+            <field name="updated_time" xsi:nil="true" />
+        </row>
+        <row>
+            <field name="id">23</field>
+            <field name="type_id">1</field>
+            <field name="title">test this still works after linux git branch merge</field>
+            <field name="description">...</field>
+            <field name="assigned_to_id" xsi:nil="true" />
+            <field name="reported_by_id">9</field>
+            <field name="status_type_id">1</field>
+            <field name="resolution_type_id" xsi:nil="true" />
+            <field name="priority_type_id">1</field>
+            <field name="created_time">2014-07-25 10:36:59</field>
+            <field name="resolved_time" xsi:nil="true" />
+            <field name="updated_time">2014-07-25 10:38:27</field>
+        </row>
+        <row>
+            <field name="id">24</field>
+            <field name="type_id">1</field>
+            <field name="title">not working</field>
+            <field name="description">not working</field>
+            <field name="assigned_to_id" xsi:nil="true" />
+            <field name="reported_by_id">9</field>
+            <field name="status_type_id">1</field>
+            <field name="resolution_type_id" xsi:nil="true" />
+            <field name="priority_type_id">1</field>
+            <field name="created_time">2014-07-25 10:39:24</field>
+            <field name="resolved_time" xsi:nil="true" />
+            <field name="updated_time">2014-07-25 10:40:06</field>
+        </row>
+        <row>
+            <field name="id">25</field>
+            <field name="type_id">1</field>
+            <field name="title">create ticket bug fix</field>
+            <field name="description">create ticket bug fix</field>
+            <field name="assigned_to_id" xsi:nil="true" />
+            <field name="reported_by_id">13</field>
+            <field name="status_type_id">1</field>
+            <field name="resolution_type_id">5</field>
+            <field name="priority_type_id">1</field>
+            <field name="created_time">2014-07-25 10:44:26</field>
+            <field name="resolved_time">2014-08-06 11:41:20</field>
+            <field name="updated_time">2014-08-06 11:41:20</field>
+        </row>
+        <row>
+            <field name="id">26</field>
+            <field name="type_id">3</field>
+            <field name="title">check merge has worked</field>
+            <field name="description">think some stuff may be broken</field>
+            <field name="assigned_to_id">9</field>
+            <field name="reported_by_id">9</field>
+            <field name="status_type_id">2</field>
+            <field name="resolution_type_id" xsi:nil="true" />
+            <field name="priority_type_id">3</field>
+            <field name="created_time">2014-08-06 10:48:40</field>
+            <field name="resolved_time" xsi:nil="true" />
+            <field name="updated_time">2014-08-06 11:40:24</field>
+        </row>
+    </table_data>
+	<table_data name="attachments">
+	<row>
+		<field name="id">1</field>
+		<field name="ticket_id">5</field>
+		<field name="filepath">attachments/hse_ie8_mediaqueries.JPG</field>
+		<field name="added_time">2014-08-06 09:30:26</field>
+		<field name="added_by_id">9</field>
+		<field name="file_type">image/jpg</field>
+	</row>
+	<row>
+		<field name="id">2</field>
+		<field name="ticket_id">24</field>
+		<field name="filepath">attachments/menu-2.jpg</field>
+		<field name="added_time">2014-08-06 10:45:52</field>
+		<field name="added_by_id">9</field>
+		<field name="file_type">image/jpg</field>
+	</row>
+	<row>
+		<field name="id">3</field>
+		<field name="ticket_id">26</field>
+		<field name="filepath">attachments/graphic.png</field>
+		<field name="added_time">2014-08-06 11:37:49</field>
+		<field name="added_by_id">9</field>
+		<field name="file_type">image/png</field>
+	</row>
+	<row>
+		<field name="id">4</field>
+		<field name="ticket_id">26</field>
+		<field name="filepath">attachments/menu-4.jpg</field>
+		<field name="added_time">2014-08-06 11:38:07</field>
+		<field name="added_by_id">9</field>
+		<field name="file_type">image/jpg</field>
+	</row>
+	<row>
+		<field name="id">5</field>
+		<field name="ticket_id">5</field>
+		<field name="filepath">attachments/menu-1.jpg</field>
+		<field name="added_time">2014-08-06 11:50:59</field>
+		<field name="added_by_id">9</field>
+		<field name="file_type">image/jpg</field>
+	</row>
+	<row>
+		<field name="id">6</field>
+		<field name="ticket_id">26</field>
+		<field name="filepath">attachments/menu-5.jpg</field>
+		<field name="added_time">2014-08-06 12:34:47</field>
+		<field name="added_by_id">9</field>
+		<field name="file_type">image/jpg</field>
+	</row>
+	<row>
+		<field name="id">7</field>
+		<field name="ticket_id">26</field>
+		<field name="filepath">attachments/adl_tm_140x90.jpg</field>
+		<field name="added_time">2014-08-06 17:49:35</field>
+		<field name="added_by_id">9</field>
+		<field name="file_type">image/jpeg</field>
+	</row>
+	<row>
+		<field name="id">8</field>
+		<field name="ticket_id">24</field>
+		<field name="filepath">attachments/Box it up _ Strava Route Cue Sheet.pdf</field>
+		<field name="added_time">2014-08-06 17:52:11</field>
+		<field name="added_by_id">9</field>
+		<field name="file_type">application/pdf</field>
+	</row>
+	</table_data>
+	<table_data name="comments">
+	<row>
+		<field name="id">1</field>
+		<field name="ticket_id">5</field>
+		<field name="created_time">2014-07-10 17:02:44</field>
+		<field name="edited_time">2014-07-31 12:01:34</field>
+		<field name="comment">1st comment for ticket #5 edit by should work now?</field>
+		<field name="added_by_id">9</field>
+		<field name="last_edited_by_id">9</field>
+	</row>
+	<row>
+		<field name="id">2</field>
+		<field name="ticket_id">5</field>
+		<field name="created_time">2014-07-10 17:02:44</field>
+		<field name="edited_time">2014-07-31 11:04:56</field>
+		<field name="comment">1st comment for ticket #5 EDIT AGAIN</field>
+		<field name="added_by_id">9</field>
+		<field name="last_edited_by_id" xsi:nil="true" />
+	</row>
+	<row>
+		<field name="id">3</field>
+		<field name="ticket_id">5</field>
+		<field name="created_time">2014-07-10 17:02:44</field>
+		<field name="edited_time">2014-07-31 12:32:56</field>
+		<field name="comment">1st comment for ticket #5 EDITED THREE TIMES</field>
+		<field name="added_by_id">9</field>
+		<field name="last_edited_by_id">9</field>
+	</row>
+	<row>
+		<field name="id">4</field>
+		<field name="ticket_id">5</field>
+		<field name="created_time">2014-07-10 17:02:44</field>
+		<field name="edited_time">2014-07-31 11:06:46</field>
+		<field name="comment">ticket #5 not sure why 1st ticket added 3 times. This comment can now be edited</field>
+		<field name="added_by_id">9</field>
+		<field name="last_edited_by_id" xsi:nil="true" />
+	</row>
+	<row>
+		<field name="id">5</field>
+		<field name="ticket_id">5</field>
+		<field name="created_time">2014-07-24 11:23:02</field>
+		<field name="edited_time">2014-07-31 13:10:56</field>
+		<field name="comment">its because you are resending the data on the page, dummy pavel edited this</field>
+		<field name="added_by_id">17</field>
+		<field name="last_edited_by_id">9</field>
+	</row>
+	<row>
+		<field name="id">6</field>
+		<field name="ticket_id">21</field>
+		<field name="created_time">2014-07-24 15:18:22</field>
+		<field name="edited_time">0000-00-00 00:00:00</field>
+		<field name="comment">I love adding comments</field>
+		<field name="added_by_id">16</field>
+		<field name="last_edited_by_id" xsi:nil="true" />
+	</row>
+	<row>
+		<field name="id">7</field>
+		<field name="ticket_id">21</field>
+		<field name="created_time">2014-07-24 15:18:30</field>
+		<field name="edited_time">2014-07-31 15:08:06</field>
+		<field name="comment">and more comments
+
+editing tickets is cool!</field>
+		<field name="added_by_id">16</field>
+		<field name="last_edited_by_id">9</field>
+	</row>
+	<row>
+		<field name="id">8</field>
+		<field name="ticket_id">21</field>
+		<field name="created_time">2014-07-24 15:18:42</field>
+		<field name="edited_time">0000-00-00 00:00:00</field>
+		<field name="comment">and yet more comments</field>
+		<field name="added_by_id">16</field>
+		<field name="last_edited_by_id" xsi:nil="true" />
+	</row>
+	<row>
+		<field name="id">9</field>
+		<field name="ticket_id">8</field>
+		<field name="created_time">2014-07-24 16:29:18</field>
+		<field name="edited_time">0000-00-00 00:00:00</field>
+		<field name="comment">test comment</field>
+		<field name="added_by_id">13</field>
+		<field name="last_edited_by_id" xsi:nil="true" />
+	</row>
+	<row>
+		<field name="id">10</field>
+		<field name="ticket_id">8</field>
+		<field name="created_time">2014-07-24 16:29:28</field>
+		<field name="edited_time">0000-00-00 00:00:00</field>
+		<field name="comment">and another obne</field>
+		<field name="added_by_id">13</field>
+		<field name="last_edited_by_id" xsi:nil="true" />
+	</row>
+	<row>
+		<field name="id">11</field>
+		<field name="ticket_id">8</field>
+		<field name="created_time">2014-07-24 16:29:34</field>
+		<field name="edited_time">2014-07-31 15:06:56</field>
+		<field name="comment">hello edit hola
+
+</field>
+		<field name="added_by_id">13</field>
+		<field name="last_edited_by_id">9</field>
+	</row>
+	<row>
+		<field name="id">12</field>
+		<field name="ticket_id">5</field>
+		<field name="created_time">2014-07-25 10:36:11</field>
+		<field name="edited_time">2014-08-06 10:42:43</field>
+		<field name="comment">add another comment on linux branch edited </field>
+		<field name="added_by_id">9</field>
+		<field name="last_edited_by_id">9</field>
+	</row>
+	<row>
+		<field name="id">13</field>
+		<field name="ticket_id">23</field>
+		<field name="created_time">2014-07-25 10:38:27</field>
+		<field name="edited_time">0000-00-00 00:00:00</field>
+		<field name="comment">and add a comment</field>
+		<field name="added_by_id">9</field>
+		<field name="last_edited_by_id" xsi:nil="true" />
+	</row>
+	<row>
+		<field name="id">14</field>
+		<field name="ticket_id">24</field>
+		<field name="created_time">2014-07-25 10:40:06</field>
+		<field name="edited_time">0000-00-00 00:00:00</field>
+		<field name="comment">check updated time works</field>
+		<field name="added_by_id">9</field>
+		<field name="last_edited_by_id" xsi:nil="true" />
+	</row>
+	<row>
+		<field name="id">15</field>
+		<field name="ticket_id">25</field>
+		<field name="created_time">2014-07-25 10:44:38</field>
+		<field name="edited_time">0000-00-00 00:00:00</field>
+		<field name="comment">yeah!</field>
+		<field name="added_by_id">13</field>
+		<field name="last_edited_by_id" xsi:nil="true" />
+	</row>
+	<row>
+		<field name="id">16</field>
+		<field name="ticket_id">13</field>
+		<field name="created_time">2014-07-25 11:18:08</field>
+		<field name="edited_time">0000-00-00 00:00:00</field>
+		<field name="comment">updated time working??</field>
+		<field name="added_by_id">13</field>
+		<field name="last_edited_by_id" xsi:nil="true" />
+	</row>
+	<row>
+		<field name="id">17</field>
+		<field name="ticket_id">5</field>
+		<field name="created_time">2014-07-31 09:30:18</field>
+		<field name="edited_time">0000-00-00 00:00:00</field>
+		<field name="comment">its because you are resending the data on the page, dummy edited</field>
+		<field name="added_by_id">9</field>
+		<field name="last_edited_by_id" xsi:nil="true" />
+	</row>
+	<row>
+		<field name="id">18</field>
+		<field name="ticket_id">5</field>
+		<field name="created_time">2014-07-31 10:19:07</field>
+		<field name="edited_time">0000-00-00 00:00:00</field>
+		<field name="comment">1st comment for ticket #5</field>
+		<field name="added_by_id">9</field>
+		<field name="last_edited_by_id" xsi:nil="true" />
+	</row>
+	<row>
+		<field name="id">19</field>
+		<field name="ticket_id">5</field>
+		<field name="created_time">2014-07-31 10:19:44</field>
+		<field name="edited_time">0000-00-00 00:00:00</field>
+		<field name="comment">its because you are resending the data on the page, dummy</field>
+		<field name="added_by_id">9</field>
+		<field name="last_edited_by_id" xsi:nil="true" />
+	</row>
+	<row>
+		<field name="id">24</field>
+		<field name="ticket_id">26</field>
+		<field name="created_time">2014-08-06 11:37:13</field>
+		<field name="edited_time">2014-08-06 11:37:34</field>
+		<field name="comment">check i can still add a comment
+
+and edit it</field>
+		<field name="added_by_id">9</field>
+		<field name="last_edited_by_id">9</field>
+	</row>
+	</table_data>
+</database>
+</mysqldump>

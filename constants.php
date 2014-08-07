@@ -34,7 +34,10 @@ define('TICKET_RESOLUTION_TYPE_WONTFIX', 3);
 define('TICKET_RESOLUTION_TYPE_DUPLICATE', 4);
 define('TICKET_RESOLUTION_TYPE_WORKSFORME', 5);
 
-// attachments locations
+// urls/locations
+define('BASE_URL', 'http://ticket_tracker.local/index.php');
 define('ATTACHMENTS_UPLOAD_DIRECTORY', 'attachments/');
+
+
 
 

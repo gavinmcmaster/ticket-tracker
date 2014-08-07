@@ -13,8 +13,9 @@
     require_once 'controllers/TicketController.php';
     
     $api = (isset($_GET['api'])) ? $_GET['api']: false;
+    $download = (isset($_GET['download'])) ? $_GET['download'] : false;
 
-    if(!$api) {
+    if(!$api && !$download) {
         include('ui/header.htm');
     }
 
@@ -24,7 +25,7 @@
         echo 'Caught exception: ',  $e->getMessage(), "\n";
     }
 
-    if(!$api) {
+    if(!$api && !$download) {
         include_once 'templates/nav.php';
     }
 
@@ -32,7 +33,7 @@
     $action = isset($_GET['action']) ? $_GET['action'] : '';
     if(method_exists($controller,$action)) $controller->handleAction($action);
 
-    if(!$api) {
+    if(!$api && !$download) {
         include('ui/footer.htm');
     }
 

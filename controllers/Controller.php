@@ -421,8 +421,8 @@ class Controller extends MainController {
     private function uploadFile($ticketId, $files) {
        echo "Controller uploadFile " . $files['file']['name'] . "<br/>";
 
-        $allowedExts = array("gif", "jpeg", "jpg", "png");
-        $allowedFileTypes = array("image/gif", "image/jpeg", "image/jpg", "image/x-png", "image/png");
+        $allowedExts = array("gif", "jpeg", "jpg", "png", "pdf");
+        $allowedFileTypes = array("image/gif", "image/jpeg", "image/jpg", "image/x-png", "image/png", "application/pdf");
         $temp = explode(".", $files["file"]["name"]);
         $extension = end($temp);
         $fileType = $files["file"]["type"];
@@ -469,79 +469,41 @@ class Controller extends MainController {
         try {
             $attachmentData = $this->ticketController->getAttachmentPathById($attachmentId);
 
-            //echo "attachment data: " . $attachmentData;
-
             if($attachmentData) {
                 $filePath = $attachmentData['filepath'];
                 $fileType = $attachmentData['file_type'];
 
-                $basename = basename($filePath);
-                $filedata = file_get_contents($filePath);
-
-                if ($filedata)
-                {
-                    // THESE HEADERS ARE USED ON ALL BROWSERS
-                    header("Content-Type: application-x/force-download");
-                    header("Content-Disposition: attachment; filename=\"$basename\"");
-                    header("Content-length: ".(string)(strlen($filedata)));
-                    header("Expires: ".gmdate("D, d M Y H:i:s", mktime(date("H")+2, date("i"), date("s"), date("m"), date("d"), date("Y")))." GMT");
-                    header("Last-Modified: ".gmdate("D, d M Y H:i:s")." GMT");
-
-                    // THIS HEADER MUST BE OMITTED FOR IE 6
-                    if (FALSE === strpos($_SERVER["HTTP_USER_AGENT"], 'MSIE 6'))
-                    {
-                        header("Cache-Control: no-cache, must-revalidate");
-                    }
-
-                    // THIS IS THE LAST HEADER
-                    header("Pragma: no-cache");
-
-                    // FLUSH THE HEADERS TO THE BROWSER
-                    flush();
-
-                    // CAPTURE THE FILE IN THE OUTPUT BUFFERS - WILL BE FLUSHED AT SCRIPT END
-                    ob_start();
-                    echo $filedata;
+                if (!is_file($filePath)) {
+                    echo 'File not found.('.$filePath.')';
+                } elseif (is_dir($filePath)) {
+                   echo 'Cannot download folder.';
+                }  else {
+                    $this->sendDownload($filePath, $fileType);
+                    die();
                 }
-
-                //$fullPath = realpath($filePath);
-                //$fullPath = realpath($filePath);
-                //echo "download " . ATTACHMENTS_UPLOAD_DIRECTORY.basename($filePath) . " - " .basename($filePath) . " - " . $fileType;
-               /* header("Content-Type:$fileType");
-
-                header('Content-Description: File Transfer');
-                header("Content-Disposition: attachment; filename=" .basename($filePath));
-                header('Expires: 0');
-                //header('Cache-Control: must-revalidate');
-                //header('Pragma: public');
-                header('Content-Length: ' . filesize(ATTACHMENTS_UPLOAD_DIRECTORY.basename($filePath)));*/
-
-
-                /*header('Content-Description: File Transfer');
-                header('Content-Type: application/octet-stream');
-                header('Content-Disposition: attachment; filename="'.basename($filePath).'"'); //<<< Note the " " surrounding the file name
-                header('Content-Transfer-Encoding: binary');
-                header('Connection: Keep-Alive');
-                header('Expires: 0');
-                header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
-                header('Pragma: public');
-                header('Content-Length: ' . filesize(ATTACHMENTS_UPLOAD_DIRECTORY.basename($filePath)));
-
-                readfile(ATTACHMENTS_UPLOAD_DIRECTORY.basename($filePath));*/
-
-
-
-
-
             }
         }
         catch(Exception $e) {
             echo 'Caught exception: ',  $e->getMessage(), "\n";
         }
-
-       /* $url = 'http://ticket_tracker.local/index.php?action=viewTicket&id='.$ticketId;
-        header("Location: $url");
-        die();*/
-
     }
+
+    private function sendDownload($file, $fileType) {
+        //echo "send download";
+        $basename = basename($file);
+        $length   = sprintf("%u", filesize($file));
+
+        header('Content-Description: File Transfer');
+        header('Content-Type: $fileType');
+        header('Content-Disposition: attachment; filename="' . $basename . '"');
+        header('Content-Transfer-Encoding: binary');
+        header('Connection: Keep-Alive');
+        header('Expires: 0');
+        header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
+        header('Pragma: public');
+        header('Content-Length: ' . $length);
+
+        set_time_limit(0);
+        readfile($file);
+     }
 }
