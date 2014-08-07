@@ -160,8 +160,7 @@ class Controller extends MainController {
         Session::getInstance()->__unset('permission_type_id');
         Session::getInstance()->destroy();
 
-        $url = 'http://ticket_tracker.local/index.php';
-        header("Location: $url");
+        header("Location:".BASE_URL);
         die();
     }
 
@@ -193,7 +192,7 @@ class Controller extends MainController {
                 echo "createTicket success: " . $success;
                 if($success) {
                     $ticketId = $this->ticketController->getLastInsertId();
-                    $url = 'http://ticket_tracker.local/index.php?action=viewTicket&id='.$ticketId;
+                    $url = BASE_URL.'?action=viewTicket&id='.$ticketId;
                     header("Location: $url");
                     die();
                 }
@@ -367,7 +366,7 @@ class Controller extends MainController {
                     }
 
                     // if resolution has been set then ignore any other modifications
-                    $url = 'http://ticket_tracker.local/index.php?action=viewTicket&id='.$ticketId;
+                    $url = BASE_URL.'?action=viewTicket&id='.$ticketId;
                     header("Location: $url");
                     die();
                 }
@@ -413,7 +412,7 @@ class Controller extends MainController {
         Session::getInstance()->__set('user_type_id', $user['user_type_id']);
         Session::getInstance()->__set('permission_type_id', $user['permission_type_id']);
 
-        $url = 'http://ticket_tracker.local/index.php?action=listTickets';
+        $url = BASE_URL.'?action=listTickets';
         header("Location: $url");
         die();
     }
@@ -447,7 +446,7 @@ class Controller extends MainController {
               if($fileStored) {
                 try {
                     $success = $this->ticketController->addAttachment($ticketId, $filePath, $fileType);
-                    $url = 'http://ticket_tracker.local/index.php?action=viewTicket&id='.$ticketId;
+                    $url = BASE_URL.'?action=viewTicket&id='.$ticketId;
                     header("Location: $url");
                     die();
                 }

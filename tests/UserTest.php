@@ -15,5 +15,5 @@ class UserTest extends Tracker_Tests_DatabaseTestCase {
        $this->assertEquals(7, $this->getConnection()->getRowCount('users'));
     }
 
-    public function testAddUser
+    //public function testAddUser
 }
