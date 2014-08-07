@@ -20,7 +20,7 @@
     }
 
     try {
-        $controller = ControllerFactory::getController($api, $config);//new Controller($config);
+        $controller = ControllerFactory::getController($api, $config);
     } catch(Exception $e) {
         echo 'Caught exception: ',  $e->getMessage(), "\n";
     }

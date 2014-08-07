@@ -1,7 +1,7 @@
 <?php
 
 require_once 'controllers/MainController.php';
-require_once 'controllers/Controller.php';
+require_once 'controllers/AppController.php';
 require_once 'controllers/ApiController.php';
 
 class ControllerFactory {
@@ -12,6 +12,6 @@ class ControllerFactory {
 		if ($api) {
 			return new ApiController($config);
 		}
-		return new Controller($config);
+		return new AppController($config);
 	}
 }

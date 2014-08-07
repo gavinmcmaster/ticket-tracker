@@ -6,7 +6,7 @@
  * Time: 12:30
  */
 
-class Controller extends MainController {
+class AppController extends MainController {
 
     public function handleAction($action) {
 
