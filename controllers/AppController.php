@@ -91,7 +91,7 @@ class AppController extends MainController {
                 }
                 $ticketId = $_GET['id'];
 
-                echo "userFile isset: " . isset($_FILES['userFile']) . " - " . count($_FILES);
+                //echo "userFile isset: " . isset($_FILES['userFile']) . " - " . count($_FILES);
                 if(isset($_FILES['file'])) {
                     if ($_FILES["file"]["error"] > 0) {
                         echo "File upload error: " . $_FILES["file"]["error"] . "<br>";
@@ -151,7 +151,7 @@ class AppController extends MainController {
     }
 
     public function logout() {
-        echo "Controller logout call Session destroy";
+        //echo "Controller logout call Session destroy";
 
         Session::getInstance()->__unset('user_id');
         Session::getInstance()->__unset('user_name');
@@ -189,7 +189,7 @@ class AppController extends MainController {
         if($create) {
             try {
                 $success = $this->ticketController->createTicket();
-                echo "createTicket success: " . $success;
+                //echo "createTicket success: " . $success;
                 if($success) {
                     $ticketId = $this->ticketController->getLastInsertId();
                     $url = BASE_URL.'?action=viewTicket&id='.$ticketId;
@@ -300,9 +300,9 @@ class AppController extends MainController {
             $editComment = (int)$editComment;
         }
 
-        if(isset($_POST['submit_comment_edit'])) {
+        /*if(isset($_POST['submit_comment_edit'])) {
             echo "edit comment with id: " . $_POST['submit_comment_edit'];
-        }
+        }*/
 
         include __DIR__ . '/../templates/view_ticket.php';
     }
@@ -349,7 +349,7 @@ class AppController extends MainController {
     }
 
     public function resolveTicket($ticketId, $resolutionId) {
-        echo "Controller resolveTicket ". $ticketId . " - " . $resolutionId;
+        //echo "Controller resolveTicket ". $ticketId . " - " . $resolutionId;
 
         if(is_int($resolutionId) && $resolutionId > 0) {
 
@@ -418,7 +418,7 @@ class AppController extends MainController {
     }
 
     private function uploadFile($ticketId, $files) {
-       echo "Controller uploadFile " . $files['file']['name'] . "<br/>";
+       //echo "Controller uploadFile " . $files['file']['name'] . "<br/>";
 
         $allowedExts = array("gif", "jpeg", "jpg", "png", "pdf");
         $allowedFileTypes = array("image/gif", "image/jpeg", "image/jpg", "image/x-png", "image/png", "application/pdf");
@@ -427,7 +427,7 @@ class AppController extends MainController {
         $fileType = $files["file"]["type"];
         $filePath = ATTACHMENTS_UPLOAD_DIRECTORY . $files["file"]["name"];
 
-        echo "file type: " . $fileType;
+        //echo "file type: " . $fileType;
 
         if (in_array($fileType, $allowedFileTypes) && in_array($extension, $allowedExts)) {
           if ($files["file"]["error"] > 0) {
@@ -488,7 +488,7 @@ class AppController extends MainController {
     }
 
     private function sendDownload($file, $fileType) {
-        //echo "send download";
+        //echo "send download " . $file . " - " . $fileType;
         $basename = basename($file);
         $length   = sprintf("%u", filesize($file));
 

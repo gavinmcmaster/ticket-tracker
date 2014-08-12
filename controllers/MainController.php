@@ -8,7 +8,7 @@ class MainController implements IMainController {
     protected $db_host = "localhost";
     protected $db_name = "ticket_tracker"; 
     protected $db_user = "root";
-    protected $db_pass = "gav1n";
+    protected $db_pass = "root";
 
     protected $userController = null;
     protected $ticketController = null;

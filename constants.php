@@ -35,7 +35,7 @@ define('TICKET_RESOLUTION_TYPE_DUPLICATE', 4);
 define('TICKET_RESOLUTION_TYPE_WORKSFORME', 5);
 
 // urls/locations
-define('BASE_URL', 'http://ticket_tracker.local/index.php');
+define('BASE_URL', 'http://localhost/training/web/ticket_tracker/index.php');
 define('ATTACHMENTS_UPLOAD_DIRECTORY', 'attachments/');
 
 

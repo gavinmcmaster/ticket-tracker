@@ -147,6 +147,7 @@ UPDATE users SET permission_type_id=4 WHERE name='pavel';
 
 UPDATE attachments SET file_type='image/jpg' WHERE id != 3;
 UPDATE attachments SET file_type='image/png' WHERE id= 3;
+UPDATE attachments SET file_type='image/jpg' WHERE ticket_id=15 OR ticket_id=16;
 
 /**** all insert *****/
 INSERT INTO users (name, email, password, user_type_id) VALUES ("test", "test@test.com", "password", 1);
