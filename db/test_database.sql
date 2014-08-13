@@ -113,6 +113,19 @@ CREATE TABLE `comments` (
 ) ENGINE=InnoDB AUTO_INCREMENT=25 DEFAULT CHARSET=utf8;
 
 SELECT * FROM users;
+SELECT * FROM user_types;
+SELECT * FROM user_permission_types;
+SELECT * FROM users WHERE user_type_id=2 AND permission_type_id=4;
+
+SELECT * FROM tickets;
+SELECT * FROM ticket_priority_types;
+SELECT * FROM comments;
+
+SELECT DISTINCT tickets.id, tickets.title FROM tickets INNER JOIN comments ON tickets.id = comments.ticket_id;
+SELECT DISTINCT tickets.id, tickets.title FROM tickets INNER JOIN attachments ON tickets.id = attachments.ticket_id;
+
+
+
 
 
 

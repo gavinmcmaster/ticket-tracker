@@ -1,0 +1,6 @@
+<?xml version="1.0" ?>
+<dataset>
+    <ticketsWithAttachments id="5" title="1st ticket"/>
+    <ticketsWithAttachments id="24" title="not working"/>
+    <ticketsWithAttachments id="26" title="check merge has worked"/>
+</dataset>

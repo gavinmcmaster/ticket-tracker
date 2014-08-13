@@ -1,0 +1,5 @@
+<?xml version="1.0" ?>
+<dataset>
+    <programmerAdmins id="9" name="gav" email="gavmcmaster@gmail.com"/>
+    <programmerAdmins id="10" name="pavel" email="pavel@test.com" />
+</dataset>

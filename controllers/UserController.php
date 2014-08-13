@@ -15,8 +15,9 @@ class UserController {
 
      private function init() {
      	//echo 'UserController init';
-     	if(is_null($this->user)) $this->user = new User($this->dbo);
-
+     	if(is_null($this->user)) {
+            $this->user = new User($this->dbo);
+        }
      }
 
      public function login() {
@@ -38,7 +39,9 @@ class UserController {
         if(isset($_POST['registerInputPassword1'])) $password = $_POST['registerInputPassword1'];
         if(isset($_POST['userType'])) $userTypeID = $_POST['userType'];
 
-        if(isset($userTypeID) && !is_int($userTypeID)) $userTypeID = (int)$userTypeID;
+        if(isset($userTypeID) && !is_int($userTypeID)) {
+            $userTypeID = (int)$userTypeID;
+        }
         //echo " " . $username . " - " .$email . ' - ' . $password . " - " . $userTypeID . " - " . is_int($userTypeID);
 
         if(isset($username) && isset($email) && isset($password) && isset($userTypeID) && is_int($userTypeID)) {

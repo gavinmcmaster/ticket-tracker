@@ -25,13 +25,14 @@ class Database {
     private function connect() {
         try {
             //echo "connect to host " . $this->host . " db " . $this->db . " user " . $this->user . " pass " . $this->pass;
+            //die();
             $this->dbh = new PDO("mysql:host=".$this->host.";dbname=".$this->db,$this->user,$this->pass);
             $this->dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             $this->isConnected = true;
         } catch (PDOException $e) {
             echo "Error!: " . $e->getMessage() . "<br/>";
             $this->isConnected = false;
-            //die();
+            die();
         }
     }
 
@@ -78,4 +79,7 @@ class Database {
         return $this->stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-} 
+    public function getPDO() {
+        return $this->dbh;
+    }
+}

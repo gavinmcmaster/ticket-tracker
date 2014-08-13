@@ -1,0 +1,71 @@
+<?xml version="1.0"?>
+<mysqldump xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <database name="ticket_tracker">
+    <table_data name="users">
+        <row>
+            <field name="id">9</field>
+            <field name="name">gav</field>
+            <field name="email">gavmcmaster@gmail.com</field>
+            <field name="password">bdee4dfede14dd1e127ebc23688131ff</field>
+            <field name="user_type_id">2</field>
+            <field name="permission_type_id">4</field>
+        </row>
+        <row>
+            <field name="id">10</field>
+            <field name="name">pavel</field>
+            <field name="email">pavel@test.com</field>
+            <field name="password">fef191eecf129deb7b5eccb0024d1557</field>
+            <field name="user_type_id">2</field>
+            <field name="permission_type_id">4</field>
+        </row>
+        <row>
+            <field name="id">11</field>
+            <field name="name">tony</field>
+            <field name="email">tony@test.com</field>
+            <field name="password">bdee4dfede14dd1e127ebc23688131ff</field>
+            <field name="user_type_id">3</field>
+            <field name="permission_type_id">1</field>
+        </row>
+        <row>
+            <field name="id">12</field>
+            <field name="name">ian</field>
+            <field name="email">ian@test.com</field>
+            <field name="password">bdee4dfede14dd1e127ebc23688131ff</field>
+            <field name="user_type_id">1</field>
+            <field name="permission_type_id">2</field>
+        </row>
+        <row>
+            <field name="id">13</field>
+            <field name="name">carlos</field>
+            <field name="email">carlos@test.com</field>
+            <field name="password">bdee4dfede14dd1e127ebc23688131ff</field>
+            <field name="user_type_id">2</field>
+            <field name="permission_type_id">3</field>
+        </row>
+        <row>
+            <field name="id">16</field>
+            <field name="name">luke</field>
+            <field name="email">luke@test.com</field>
+            <field name="password">bdee4dfede14dd1e127ebc23688131ff</field>
+            <field name="user_type_id">5</field>
+            <field name="permission_type_id">3</field>
+        </row>
+        <row>
+            <field name="id">17</field>
+            <field name="name">jo</field>
+            <field name="email">jo@test.com</field>
+            <field name="password">bdee4dfede14dd1e127ebc23688131ff</field>
+            <field name="user_type_id">4</field>
+            <field name="permission_type_id">4</field>
+        </row>
+        <row>
+            <field name="id">18</field>
+            <field name="name">newUser</field>
+            <field name="email">new@test.com</field>
+            <field name="password">hello</field>
+            <field name="user_type_id">3</field>
+            <field name="permission_type_id">1</field>
+        </row>
+    </table_data>
+</database>
+</mysqldump>
